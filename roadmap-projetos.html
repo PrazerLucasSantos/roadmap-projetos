@@ -1,0 +1,2668 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Roadmap de Projetos</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root{
+      --blue:#0C1BA8;--ink:#272727;--bg:#F9F9F9;--muted:#A5A7B0;
+      --navy:#04223D;--blue-bright:#2E78D3;--blue-steel:#536FA7;
+      --blue-soft:#5FA3CD;--ice:#C9DCF2;--mint:#C8F4C3;
+      --periwinkle:#969DFF;--coral:#FFC3BB;--peach:#FFDEBD;
+      --lavender:#E6D4F4;--marker:#E11D2E;--surface:#fff;
+      --line:#D9DBE2;--weekend:#EFF0F4;--holiday:#FFF3E0;
+      --shadow:0 12px 34px rgba(4,34,61,.1);
+      --header-h:62px;--lane-h:288px;
+      --font-title:"PP Telegraf","PP Telegraph",Outfit,Arial,sans-serif;
+      --font-body:Outfit,Arial,sans-serif
+    }
+    *{box-sizing:border-box}
+    html,body{margin:0;height:100%;overflow:hidden;font-family:var(--font-body);color:var(--ink);background:var(--bg)}
+    .shell{height:100vh;display:grid;grid-template-rows:48px minmax(0,1fr);overflow:hidden}
+    .view-host{min-height:0;height:100%;overflow:hidden}
+    .app-tabs{display:flex;align-items:center;gap:6px;padding:0 14px;background:#fff;border-bottom:1px solid var(--line);z-index:80}
+    .app-tabs button{border:0;background:transparent;padding:12px 14px;font-weight:700;font-size:.82rem;color:var(--muted);border-bottom:3px solid transparent}
+    .app-tabs button.active{color:var(--blue);border-bottom-color:var(--blue)}
+    .view-panel{min-height:0;height:100%;overflow:hidden}
+    .view-panel.hidden{display:none!important}
+    .app{height:100%;width:100%;display:grid;grid-template-columns:350px minmax(0,1fr);overflow:hidden;min-height:0}
+    .app.hide-side{grid-template-columns:minmax(0,1fr) !important}
+    .app.hide-side .sidebar{display:none !important}
+    .side-show{display:none;width:36px;height:36px;border:1px solid var(--line);background:#fff;border-radius:10px;font-size:18px;line-height:1;flex:none}
+    .app.hide-side .side-show{display:inline-flex;align-items:center;justify-content:center}
+    button,input,select,textarea{font:inherit}
+    button{cursor:pointer}
+    *{scrollbar-width:auto;scrollbar-color:var(--blue-steel) #E8EAF0}
+    *::-webkit-scrollbar{width:15px;height:15px}
+    *::-webkit-scrollbar-track{background:#E8EAF0}
+    *::-webkit-scrollbar-thumb{background:var(--blue-steel);border:3px solid #E8EAF0;border-radius:10px}
+    *::-webkit-scrollbar-thumb:hover{background:var(--blue)}
+    .app.hide-side{grid-template-columns:minmax(0,1fr)}
+    .app.hide-side .sidebar{display:none}
+    .backlog-app.hide-tree{grid-template-columns:minmax(0,1fr)}
+    .backlog-app.hide-tree .backlog-main{display:none}
+    #blShowTreeBtn{display:none;margin:0 0 8px}
+    .backlog-app.hide-tree #blShowTreeBtn{display:inline-flex}
+    .sidebar{height:100%;max-height:100%;position:relative;overflow-x:hidden;overflow-y:auto;background:#fff;border-right:1px solid var(--line);padding:18px 16px 28px;z-index:40;flex-shrink:0;min-height:0}
+    .brand h1{font-family:var(--font-title);font-size:1.7rem;font-weight:500;letter-spacing:-.03em;margin:0;color:var(--blue)}
+    .brand p{margin:5px 0 18px;color:var(--muted);font-size:.88rem}
+    .section{padding:15px 0;border-top:1px solid var(--line)}
+    .section:first-of-type{border-top:0}
+    .section-title{font-family:var(--font-title);font-size:.75rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--blue);margin:0 0 10px}
+    .field{margin-bottom:10px}
+    .field label{display:block;font-size:.73rem;font-weight:600;margin:0 0 5px}
+    .field input,.field select,.field textarea{width:100%;padding:9px 10px;border:1px solid var(--line);border-radius:9px;background:#FCFCFD;color:var(--ink);outline:none}
+    .field input:focus,.field select:focus,.field textarea:focus{border-color:var(--blue);box-shadow:0 0 0 3px rgba(12,27,168,.1)}
+    .field textarea{resize:vertical;min-height:82px}
+    .check{display:flex;align-items:center;gap:8px;font-size:.78rem;font-weight:600;margin:0 0 8px}
+    .check input{width:auto}
+    .two{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+    .btn{border:1px solid var(--line);border-radius:999px;background:#fff;padding:8px 12px;font-weight:600;font-size:.79rem;color:var(--ink)}
+    .btn:hover{border-color:var(--blue);box-shadow:0 4px 15px rgba(12,27,168,.1)}
+    .btn.primary{background:var(--blue);border-color:var(--blue);color:#fff}
+    .btn.danger{color:#A41522;border-color:#F3B7BD;background:#FFF7F8}
+    .btn.small{padding:6px 10px;font-size:.72rem}
+    .button-grid{display:grid;grid-template-columns:1fr 1fr;gap:7px}
+    .seg{display:grid;grid-template-columns:repeat(3,1fr);background:#ECEEF3;padding:4px;border-radius:11px;gap:3px}
+    .seg button{border:0;background:transparent;border-radius:8px;padding:8px 4px;color:#7B7E88;font-size:.77rem;font-weight:600}
+    .seg button.active{background:#fff;color:var(--blue);box-shadow:0 2px 7px rgba(0,0,0,.07)}
+    .range-row{display:flex;gap:8px;align-items:center}
+    .range-row input[type=range]{flex:1;accent-color:var(--blue)}
+    .presets{display:flex;gap:5px;margin-top:7px}
+    .list{display:flex;flex-direction:column;gap:6px;max-height:205px;overflow:auto;padding-right:3px}
+    .list-item{display:flex;align-items:center;gap:9px;border:1px solid var(--line);background:#FCFCFD;border-radius:9px;padding:8px;min-width:0;text-align:left;width:100%}
+    .list-item:hover,.list-item.active{border-color:var(--blue);background:#F2F5FF}
+    .dot{width:9px;height:9px;border-radius:50%;flex:none}
+    .list-copy{min-width:0}
+    .list-copy strong,.list-copy span{display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    .list-copy strong{font-size:.8rem}
+    .list-copy span{font-size:.69rem;color:var(--muted);margin-top:2px}
+    .empty{font-size:.76rem;color:var(--muted);padding:7px 2px}
+    .hint{font-size:.72rem;color:var(--muted);margin:0 0 8px;line-height:1.35}
+    .main{min-width:0;min-height:0;padding:16px;display:flex;flex-direction:column;gap:12px;height:100%;overflow:hidden;position:relative}
+    .toolbar{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:10px;background:#fff;border:1px solid var(--line);border-radius:13px;padding:11px 14px;box-shadow:var(--shadow)}
+    .toolbar-actions,.legend,.stats{display:flex;align-items:center;flex-wrap:wrap;gap:8px}
+    .legend{font-size:.72rem;color:#747782;font-weight:600}
+    .legend span{display:inline-flex;align-items:center;gap:5px}
+    .swatch{width:12px;height:12px;border-radius:3px}
+    .stat{background:#F1F4FA;border-radius:999px;padding:6px 10px;font-size:.73rem;font-weight:600;color:var(--navy)}
+    .stat.warn{background:#FFF3E0;color:#8A4B00}
+    .board-wrap{min-height:0;flex:1;display:flex;overflow:hidden;background:#fff;border:1px solid var(--line);border-radius:13px;box-shadow:var(--shadow);min-width:0;position:relative}
+    .board-scroll{position:relative;overflow-x:auto;overflow-y:hidden;flex:1;min-width:0;width:100%;max-width:100%}
+    .board-scroll.can-y{overflow-y:auto}
+    .board{position:relative;min-width:100%;user-select:none;background:#fff}
+    .timeline-header{height:var(--header-h);position:sticky;top:0;z-index:12;display:grid;background:rgba(255,255,255,.97);border-bottom:1px solid var(--line)}
+    .col-head{display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;border-right:1px solid var(--line);padding:2px 1px;font-size:.68rem;font-weight:700;line-height:1.05;gap:0;overflow:hidden}
+    .col-head small{display:block;color:var(--muted);font-size:.55rem;font-weight:500;margin-top:0;line-height:1.1}
+    .col-head.weekend{background:var(--weekend);color:#8E919A}
+    .col-head.holiday{background:var(--holiday);color:#8A4B00}
+    .col-head.month-a{background:rgba(12,27,168,.04)}
+    .col-head.month-b{background:rgba(46,120,211,.07)}
+    .col-head .hd-sprint{display:block;font-size:.5rem;font-weight:800;color:var(--blue);line-height:1;letter-spacing:.02em;margin-bottom:1px}
+    .col-head .hd-day{display:block;font-size:.72rem;font-weight:800;line-height:1;letter-spacing:-.02em}
+    .col-head .hd-month{display:block;font-size:.58rem;font-weight:700;color:var(--ink);margin-top:1px;line-height:1}
+    .col-head .hd-week{display:block;font-size:.52rem;font-weight:500;color:#8E919A;margin-top:1px;line-height:1;text-transform:lowercase}
+    .col-head .hd-top{display:block;font-size:.68rem;font-weight:800;line-height:1.05}
+    .col-head .hd-sub{display:block;font-size:.52rem;font-weight:500;color:var(--muted);margin-top:1px;line-height:1.1}
+    .board.compact{--header-h:50px}
+    .board.compact .col-head .hd-day{font-size:.66rem}
+    .board.compact .col-head .hd-month,.board.compact .col-head .hd-week{font-size:.5rem}
+    .lanes{position:relative}
+    .lane{position:relative;z-index:1;border-bottom:2px solid #D5D7DF;background-color:transparent;background-image:linear-gradient(to right,var(--line) 1px,transparent 1px);background-size:var(--col-w) 100%}
+    .lane:nth-child(even){background-color:transparent}
+    .lane-label{position:absolute;left:8px;top:8px;z-index:9;background:rgba(255,255,255,.94);border:1px solid var(--line);border-radius:999px;padding:4px 8px;color:#7B7E88;font-size:.66rem;font-weight:700;cursor:pointer;pointer-events:auto}
+    .lane-label:hover{border-color:var(--blue);color:var(--blue)}
+    .lane-menu{position:fixed;z-index:120;width:240px;background:#fff;border:1px solid var(--line);border-radius:12px;padding:10px;box-shadow:var(--shadow)}
+    .lane-menu .button-grid{margin-top:8px}
+    .file-dock{position:absolute;right:12px;bottom:12px;z-index:25;display:flex;gap:8px;background:rgba(255,255,255,.96);border:1px solid var(--line);border-radius:12px;padding:8px;box-shadow:var(--shadow);pointer-events:auto}
+    .auto-fab{width:36px;height:36px;border-radius:10px;border:1px solid var(--line);background:#fff;cursor:pointer;font-size:16px;line-height:1}
+    .auto-fab.open,.auto-fab:hover{border-color:var(--blue);color:var(--blue)}
+    .auto-panel{position:absolute;right:16px;top:70px;z-index:40;width:min(420px,calc(100% - 32px));max-height:calc(100% - 90px);overflow:auto;background:#fff;border:1px solid var(--line);border-radius:14px;padding:14px 16px 18px;box-shadow:var(--shadow)}
+    .auto-panel.hidden{display:none}
+    .auto-panel h3{margin:0 0 8px;font-size:.95rem}
+    .seg-mini{display:flex;gap:6px;margin:0 0 10px}
+    .seg-mini button{flex:1}
+    .lane-resizer{position:absolute;left:0;right:0;bottom:-6px;height:14px;cursor:ns-resize;z-index:8}
+    .lane-resizer:hover{background:rgba(12,27,168,.22)}
+    .weekend-band{position:absolute;top:0;bottom:0;background:rgba(214,216,224,.32);pointer-events:none}
+    .holiday-band{position:absolute;top:0;bottom:0;background:rgba(255,183,77,.18);pointer-events:none}
+    .item{position:absolute;z-index:5;border-radius:11px;box-shadow:0 7px 18px rgba(4,34,61,.14);touch-action:none;overflow:hidden;outline:2px solid transparent}
+    .item.selected{outline-color:var(--blue);outline-offset:2px;z-index:7}
+    .phase,.homolog,.billing{display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:10px 12px;border:1px solid rgba(255,255,255,.5);min-height:0;box-sizing:border-box}
+    .phase strong,.homolog strong,.billing strong{display:block;max-width:100%;font-weight:700;line-height:1.12}
+    .phase strong{font-size:.95rem}
+    .phase .dates,.homolog .dates,.billing .dates{font-size:.67rem;opacity:.8;margin-top:5px;white-space:nowrap}
+    .phase .details{font-size:.7rem;line-height:1.28;margin-top:8px;white-space:pre-line;max-height:none;overflow:auto;width:100%;flex:1}
+    .phase .money,.billing .money{font-size:.73rem;font-weight:700;margin-top:7px;background:rgba(255,255,255,.25);border-radius:999px;padding:3px 7px}
+    .homolog strong{font-size:.84rem}
+    .billing strong{font-size:.82rem}
+    .handle{position:absolute;top:0;bottom:0;width:12px;z-index:4}
+    .handle.left{left:0;cursor:ew-resize}.handle.right{right:0;cursor:ew-resize}
+    .handle::after{content:"";position:absolute;top:50%;transform:translateY(-50%);width:3px;height:25px;border-radius:2px;background:rgba(255,255,255,.7)}
+    .handle.left::after{left:4px}.handle.right::after{right:4px}
+    .marker{position:absolute;top:0;bottom:0;width:3px;z-index:9;transform:translateX(-1.5px);cursor:pointer}
+    .marker-pill{position:absolute;top:8px;left:7px;white-space:nowrap;border-radius:999px;padding:5px 9px;color:#fff;font-size:.69rem;font-weight:700;box-shadow:0 4px 12px rgba(0,0,0,.18);max-width:220px;overflow:hidden;text-overflow:ellipsis}
+    .marker.selected{width:5px;box-shadow:0 0 0 2px #fff,0 0 0 4px var(--blue);z-index:10}
+    .today-line{position:absolute;top:0;bottom:0;width:3px;z-index:11;transform:translateX(-1.5px);pointer-events:auto;cursor:pointer}
+    .today-pill{position:absolute;top:8px;left:7px;white-space:nowrap;border-radius:999px;padding:5px 9px;color:#fff;font-size:.69rem;font-weight:700;box-shadow:0 4px 12px rgba(0,0,0,.18)}
+    .today-line.selected{width:5px;box-shadow:0 0 0 2px #fff,0 0 0 4px var(--blue)}
+    .popover{position:absolute;z-index:30;width:340px;background:#fff;border:1px solid var(--line);border-radius:13px;padding:13px;box-shadow:0 18px 48px rgba(4,34,61,.2);user-select:text}
+    .popover::before{content:"";position:absolute;top:-7px;left:24px;width:12px;height:12px;background:#fff;border-left:1px solid var(--line);border-top:1px solid var(--line);transform:rotate(45deg)}
+    .popover .two{grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:8px;align-items:start}
+    .popover .field{min-width:0;margin-bottom:8px}
+    .popover input,.popover select,.popover textarea{min-width:0;max-width:100%;width:100%;box-sizing:border-box}
+    .popover input[type=date]{padding:7px 6px}
+    .pop-actions{display:flex;justify-content:space-between;align-items:center;gap:7px;margin-top:10px;flex-wrap:wrap}
+    .pop-actions span{display:flex;flex-wrap:wrap;gap:6px;justify-content:flex-end}
+    .pop-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
+    .pop-head strong{font-size:.85rem;color:var(--blue)}
+    .close{border:0;background:transparent;color:var(--muted);font-size:1.2rem;line-height:1}
+    .color-picker{display:grid;grid-template-columns:repeat(6,1fr);gap:6px}
+    .color-choice{height:25px;border:2px solid transparent;border-radius:7px}
+    .color-choice.active{border-color:var(--ink);box-shadow:0 0 0 2px #fff inset}
+    .dragging{cursor:grabbing!important}
+    .file-input{display:none}
+    .accordion-head{width:100%;display:flex;align-items:center;justify-content:space-between;gap:8px;border:0;background:transparent;padding:0;margin:0 0 10px;cursor:pointer;text-align:left}
+    .accordion-head .section-title{margin:0}
+    .accordion-head .chev{font-size:.85rem;color:var(--muted);transition:transform .2s}
+    .section.collapsed .chev{transform:rotate(-90deg)}
+    .section.collapsed .accordion-body{display:none}
+    .accordion-body{display:block}
+    .meta-grid{display:grid;gap:8px}
+    .month-band{position:absolute;top:0;bottom:0;pointer-events:none;z-index:0}
+    .month-band.a{background:rgba(12,27,168,.035)}
+    .month-band.b{background:rgba(46,120,211,.055)}
+    .board.compact .phase .details,
+    .board.compact .phase .money,
+    .board.compact .billing .money{display:none!important}
+    .board.compact .phase,
+    .board.compact .homolog,
+    .board.compact .billing{min-height:0;padding:4px 6px;border-radius:8px}
+    .board.compact .phase strong,
+    .board.compact .homolog strong,
+    .board.compact .billing strong{font-size:.7rem}
+    .board.compact .phase .dates,
+    .board.compact .homolog .dates,
+    .board.compact .billing .dates{font-size:.58rem;margin-top:2px}
+    .board.compact .lane-label{font-size:.58rem;padding:2px 6px;top:4px;left:4px}
+    .board.compact .marker-pill,
+    .board.compact .today-pill{font-size:.6rem;padding:3px 6px;top:4px}
+    .btn.active-view{background:var(--blue);border-color:var(--blue);color:#fff}
+
+    .holiday-row{display:grid;grid-template-columns:1fr auto;gap:6px;align-items:center;margin-bottom:6px}
+    .holiday-row input[type=text]{min-width:0}
+    .backlog-app{height:100%;display:grid;grid-template-columns:minmax(300px,.9fr) minmax(0,1.25fr);overflow:hidden;background:var(--bg)}
+    .backlog-side{height:100%;overflow:auto;background:#fff;border-left:1px solid var(--line);padding:12px 14px 16px;min-width:0}
+    .backlog-side .field{margin-bottom:0}
+    .backlog-side .field label{font-size:.68rem;margin:0 0 3px}
+    .backlog-side .field input,.backlog-side .field select,.backlog-side .field textarea{padding:7px 8px}
+    .backlog-side .field textarea{min-height:54px;height:54px;resize:vertical}
+    .bl-form-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px 10px}
+    .bl-span-2{grid-column:span 2}
+    .bl-span-3{grid-column:1/-1}
+    .bl-sec{grid-column:1/-1;font-size:.68rem;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:var(--blue);margin:8px 0 0;padding-top:8px;border-top:1px solid var(--line)}
+    .bl-form-actions{grid-column:1/-1;position:sticky;bottom:0;background:#fff;display:flex;gap:8px;align-items:center;padding:10px 0 4px;border-top:1px solid var(--line);z-index:2}
+    .dor-box{display:grid;grid-template-columns:1fr 1fr;gap:2px 12px;border:1px solid var(--line);border-radius:10px;padding:8px 10px;background:#F8F9FC;margin:0}
+    .backlog-main{min-width:0;padding:16px;display:flex;flex-direction:column;gap:12px;height:100%;overflow:hidden}
+    .bl-toolbar{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:8px;background:#fff;border:1px solid var(--line);border-radius:13px;padding:11px 14px;box-shadow:var(--shadow)}
+    .bl-filters{display:flex;flex-wrap:wrap;gap:7px}
+    .bl-filters select,.bl-filters input{padding:7px 9px;border:1px solid var(--line);border-radius:9px;background:#FCFCFD;font-size:.78rem}
+    .bl-board{flex:1;min-height:0;overflow:auto;background:#fff;border:1px solid var(--line);border-radius:13px;padding:14px;box-shadow:var(--shadow)}
+    .bl-group{margin:0 0 16px}
+    .bl-group h3{margin:0 0 8px;font-size:.78rem;letter-spacing:.06em;text-transform:uppercase;color:var(--blue)}
+    .bl-card{border:1px solid var(--line);border-radius:11px;padding:10px 12px;margin-bottom:6px;background:#FCFCFD;position:relative}
+    .bl-card:hover{border-color:var(--blue)}
+    .bl-card.active{border-color:var(--blue);background:#F2F5FF}
+    .bl-card.child{border-left:3px solid #C9DCF2;background:#fff}
+    .bl-tree-row{display:flex;align-items:stretch;gap:0}
+    .bl-indent{flex:none;display:flex;align-items:stretch}
+    .bl-indent-unit{width:22px;position:relative}
+    .bl-indent-unit::before{content:"";position:absolute;left:10px;top:0;bottom:0;border-left:1px solid #D5D7DF}
+    .bl-indent-unit.last::before{bottom:50%}
+    .bl-indent-unit::after{content:"";position:absolute;left:10px;top:50%;width:12px;border-top:1px solid #D5D7DF}
+    .bl-card-wrap{flex:1;min-width:0}
+    .bl-toggle{width:22px;height:22px;flex:none;border:1px solid var(--line);border-radius:6px;background:#fff;font-size:.7rem;line-height:1;padding:0;margin-right:6px;color:var(--blue)}
+    .bl-toggle.ghost{visibility:hidden}
+    .bl-title-row{display:flex;align-items:flex-start;gap:6px;min-width:0}
+    .bl-card-head{display:flex;align-items:flex-start;justify-content:space-between;gap:8px}
+    .bl-card strong{font-size:.88rem}
+    .bl-meta{font-size:.68rem;color:var(--muted);margin-top:3px}
+    .bl-card p{margin:6px 0 0;font-size:.78rem;color:#5c5f69;white-space:pre-wrap}
+    .bl-tags{display:flex;flex-wrap:wrap;gap:5px;margin-top:8px}
+    .chip{border-radius:999px;padding:3px 8px;font-size:.68rem;font-weight:700}
+    .chip.epic{background:#E8ECFF;color:var(--blue)}
+    .chip.feature{background:#E6F1FB;color:#1A5FA8}
+    .chip.pbi,.chip.story{background:#E9F8E8;color:#2B7A2B}
+    .chip.status-ready{background:#E9F8E8;color:#2B7A2B}
+    .chip.status-em_refinamento,.chip.status-esclarecer{background:#FFF3E0;color:#8A4B00}
+    .chip.status-precisa_dividir{background:#E6F1FB;color:#1A5FA8}
+    .chip.status-devolvido,.chip.status-bloqueado{background:#FDECEC;color:#A41522}
+    .dor-box{border:1px solid var(--line);border-radius:10px;padding:10px;background:#F8F9FC;margin:8px 0}
+    .dor-box label{display:flex;gap:8px;align-items:flex-start;font-size:.73rem;font-weight:500;margin:0 0 6px}
+    .dor-ok{color:#2B7A2B;font-weight:800;font-size:.78rem}
+    .dor-no{color:#8A4B00;font-weight:800;font-size:.78rem}
+    .bl-acc{border-top:1px solid var(--line);padding:8px 0}
+    .bl-acc>button{width:100%;display:flex;justify-content:space-between;border:0;background:transparent;padding:6px 0;font-size:.72rem;font-weight:800;letter-spacing:.05em;text-transform:uppercase;color:var(--blue)}
+    .bl-acc.closed .bl-acc-body{display:none}
+    .bl-outcome{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px}
+    .chip.task{background:#F4F4F6;color:#4A4D57}
+    .chip.bug{background:#FDECEC;color:#A41522}
+    .chip.spike{background:#FFF4E0;color:#8A4B00}
+    .chip.note{background:#F3EAFB;color:#6B3A8C}
+    .chip.debt{background:#EEE;color:#333}
+    .chip.integration{background:#DFF3F8;color:#0A5C6E}
+    .chip.prio-alta,.chip.prio-crítica{background:#FFF3E0;color:#8A4B00}
+    .chip.status-esclarecer{background:#FFF3E0;color:#8A4B00}
+    .chip.status-validado{background:#E9F8E8;color:#2B7A2B}
+    .bl-actions{display:flex;gap:5px;flex:none}
+    .type-grid{display:grid;grid-template-columns:repeat(6,1fr);gap:5px;margin-bottom:8px}
+    .type-grid button{border:1px solid var(--line);background:#fff;border-radius:9px;padding:7px 4px;font-size:.7rem;font-weight:700}
+    .type-grid button.active{border-color:var(--blue);color:var(--blue);background:#F2F5FF}
+    .field label{display:flex;align-items:center;gap:5px}
+    .help-i{flex:none;width:14px;height:14px;border:1px solid #C9DCF2;background:#F2F5FF;color:var(--blue);border-radius:50%;font-size:10px;font-weight:800;line-height:1;padding:0;cursor:help}
+    .help-i:hover,.help-i.open{background:var(--blue);color:#fff;border-color:var(--blue)}
+    .help-pop{position:fixed;z-index:400;width:min(340px,calc(100vw - 24px));background:#04223D;color:#fff;padding:11px 12px;border-radius:12px;font-size:.74rem;line-height:1.4;box-shadow:0 10px 28px rgba(4,34,61,.28);pointer-events:none}
+    .help-pop.hidden{display:none}
+    .help-pop .hk{margin:7px 0 2px;font-size:.62rem;letter-spacing:.05em;text-transform:uppercase;color:#C9DCF2;font-weight:800}
+    .help-pop .hk:first-child{margin-top:0}
+    .help-pop .hx{color:#FFDEBD}
+
+    @media(max-width:900px){
+      .app{grid-template-columns:1fr;height:100%;overflow:auto}
+      .app.hide-side{overflow:hidden}
+      .sidebar{position:relative;height:auto;max-height:none;border-right:0;border-bottom:1px solid var(--line)}
+      .main{height:auto;min-height:70vh;overflow:visible}
+      .app.hide-side .main{height:100%;min-height:0;overflow:hidden}
+      .list{max-height:160px}
+      .backlog-app{grid-template-columns:1fr;overflow:auto}
+      .backlog-side{height:auto;max-height:none;border-left:0;border-top:1px solid var(--line)}
+      .bl-form-grid{grid-template-columns:1fr 1fr}
+      .type-grid{grid-template-columns:repeat(3,1fr)}
+    }
+  </style>
+</head>
+<body>
+<div class="shell">
+  <nav class="app-tabs">
+    <button type="button" data-app-tab="roadmap" class="active">Roadmap</button>
+    <button type="button" data-app-tab="backlog">Backlog</button>
+    </nav>
+  <div class="view-host">
+  <div class="view-panel" id="viewRoadmap">
+<div class="app">
+  <aside class="sidebar">
+    <div class="brand"><h1>Roadmap de Projetos</h1><p>Planejamento visual e financeiro</p></div>
+
+    <section class="section" data-acc="projeto">
+      <button type="button" class="accordion-head" data-acc-toggle><h2 class="section-title">Projeto / Timeline</h2><span class="chev">▾</span></button>
+      <div class="accordion-body">
+        <div class="field"><label for="projectName">Nome (timeline)</label><input id="projectName"></div>
+        <p class="hint" id="timelineRangeHint"></p>
+        <div class="field"><label>Escala</label><div class="seg" id="scaleSeg"></div></div>
+        <label class="check"><input type="checkbox" id="hideWeekends"> Ocultar finais de semana</label>
+        <div class="field">
+          <div class="presets">
+            <button class="btn small" data-view="compact">Compacto</button>
+            <button class="btn small" data-view="medium">Média</button>
+            <button class="btn small" data-view="wide">Amplo</button>
+          </div>
+          <p class="hint">Altura da raia: arraste a borda inferior da timeline. Compacto / Média / Amplo só mudam a largura das colunas.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" data-acc="dados">
+      <button type="button" class="accordion-head" data-acc-toggle><h2 class="section-title">Dados gerais</h2><span class="chev">▾</span></button>
+      <div class="accordion-body meta-grid">
+        <div class="field"><label for="metaCodigo">Código da OS</label><input id="metaCodigo" placeholder="Ex.: 019"></div>
+        <div class="field"><label for="metaNome">Nome</label><input id="metaNome"></div>
+        <div class="field"><label for="metaCentro">Centro de Custo</label><input id="metaCentro"></div>
+        <div class="field"><label for="metaOrdem">Ordem de Desenvolvimento</label><input id="metaOrdem"></div>
+        <div class="two">
+          <div class="field"><label for="metaValor">Valor da OS</label><input id="metaValor" inputmode="decimal" placeholder="R$ 0,00"></div>
+          <div class="field"><label for="metaValorFaturado">Valor faturado</label><input id="metaValorFaturado" inputmode="decimal" placeholder="R$ 0,00" readonly></div>
+        </div>
+        <div class="field"><label for="metaValorAFaturar">Valor a faturar</label><input id="metaValorAFaturar" inputmode="decimal" placeholder="R$ 0,00" readonly></div>
+        <div class="two">
+          <div class="field"><label for="metaInicio">Data de Início</label><input id="metaInicio" type="date"></div>
+          <div class="field"><label for="metaTermino">Data de Término</label><input id="metaTermino" type="date"></div>
+        </div>
+        <p class="hint">Estas datas são o intervalo da timeline (início da primeira entrega até o fim da última). Faturado = cobranças com data anterior a hoje. A faturar = hoje em diante.</p>
+        <div class="field"><label>Datas previstas de faturamento</label><div id="metaFatDates"></div></div>
+        <div class="field"><label for="metaStatus">Status</label><input id="metaStatus" placeholder="Ex.: Faturado / 6"></div>
+        <div class="two">
+          <div class="field"><label for="metaTsl">TSL</label><input id="metaTsl"></div>
+          <div class="field"><label for="metaDso">DSO</label><input id="metaDso"></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" data-acc="feriados">
+      <button type="button" class="accordion-head" data-acc-toggle><h2 class="section-title">Feriados</h2><span class="chev">▾</span></button>
+      <div class="accordion-body">
+        <p class="hint">Visíveis no modo dia. Total, duração e restante excluem finais de semana e feriados.</p>
+        <label class="check"><input type="checkbox" id="hideHolidays"> Ocultar feriados no timeline</label>
+        <div id="holidayList" class="list" style="max-height:260px"></div>
+        <div class="button-grid" style="margin-top:8px">
+          <button class="btn" id="addHolidayBtn">+ Feriado</button>
+          <button class="btn" id="resetHolidaysBtn">Restaurar BR</button>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" data-acc="sprints">
+      <button type="button" class="accordion-head" data-acc-toggle><h2 class="section-title">Sprints</h2><span class="chev">▾</span></button>
+      <div class="accordion-body">
+        <p class="hint">O número da sprint aparece acima da data no timeline.</p>
+        <div class="two">
+          <div class="field"><label for="sprintNumber">Nº</label><input id="sprintNumber" type="number" min="1" step="1" placeholder="1"></div>
+          <div class="field"><label for="sprintName">Nome</label><input id="sprintName" readonly></div>
+        </div>
+        <p class="hint">Nome = número + Sprint. Padrão: começa na segunda e termina na sexta da semana seguinte.</p>
+        <div class="two">
+          <div class="field"><label for="sprintStart">Início</label><input id="sprintStart" type="date"></div>
+          <div class="field"><label for="sprintEnd">Fim</label><input id="sprintEnd" type="date"></div>
+        </div>
+        <div class="button-grid">
+          <button class="btn primary" id="addSprintBtn">+ Sprint</button>
+          <button class="btn" id="clearSprintFormBtn" type="button">Limpar</button>
+        </div>
+        <input type="hidden" id="sprintEditId" value="">
+        <div id="sprintList" class="list" style="max-height:220px;margin-top:10px"></div>
+      </div>
+    </section>
+
+    <section class="section" data-acc="itens">
+      <button type="button" class="accordion-head" data-acc-toggle><h2 class="section-title">Itens</h2><span class="chev">▾</span></button>
+      <div class="accordion-body">
+        <div class="button-grid">
+          <button class="btn primary" data-add="phase">+ Fase</button>
+          <button class="btn" data-add="homolog">+ HML</button>
+          <button class="btn" data-add="billing">+ Cobrança</button>
+          <button class="btn" data-add="marker">+ Marcação</button>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" data-acc="fases">
+      <button type="button" class="accordion-head" data-acc-toggle><h2 class="section-title">Fases</h2><span class="chev">▾</span></button>
+      <div class="accordion-body"><div class="list" id="phaseList"></div></div>
+    </section>
+    <section class="section" data-acc="hml">
+      <button type="button" class="accordion-head" data-acc-toggle><h2 class="section-title">Homologações</h2><span class="chev">▾</span></button>
+      <div class="accordion-body"><div class="list" id="homologList"></div></div>
+    </section>
+    <section class="section" data-acc="cob">
+      <button type="button" class="accordion-head" data-acc-toggle><h2 class="section-title">Cobranças</h2><span class="chev">▾</span></button>
+      <div class="accordion-body"><div class="list" id="billingList"></div></div>
+    </section>
+    <section class="section" data-acc="marc">
+      <button type="button" class="accordion-head" data-acc-toggle><h2 class="section-title">Marcações</h2><span class="chev">▾</span></button>
+      <div class="accordion-body"><div class="list" id="markerList"></div></div>
+    </section>
+      </aside>
+  <main class="main">
+    <div class="toolbar">
+      <div class="legend">
+        <button type="button" class="side-show" id="showSideBtn" title="Mostrar painel">☰</button>
+        <span><i class="swatch" style="background:var(--blue)"></i>Fase</span>
+        <span><i class="swatch" style="background:var(--navy)"></i>HML</span>
+        <span><i class="swatch" style="background:var(--blue-bright)"></i>Cobrança</span>
+        <span><i class="swatch" style="background:var(--marker)"></i>Marcação</span>
+        <span><i class="swatch" style="background:#E11D2E"></i>Hoje</span>
+      </div>
+      <div class="stats" id="stats"></div>
+      <div class="toolbar-actions">
+        <button class="btn small" id="toggleSideBtn" type="button">Ocultar painel</button>
+        <button class="btn small" id="todayBtn">Ir para hoje</button>
+        <button type="button" class="btn small" id="autoBtn" title="Automação">Automação</button>
+      </div>
+    </div>
+    <div class="board-wrap">
+      <div class="board-scroll" id="boardScroll"><div class="board" id="board"></div></div>
+      <div class="file-dock">
+        <button class="btn" id="exportBtn">Salvar</button>
+        <button class="btn" id="importBtn">Carregar</button>
+        <button class="btn danger" id="resetBtn">Limpar / reset</button>
+        <input class="file-input" id="importFile" type="file" accept=".json,application/json">
+      </div>
+    </div>
+    <div class="auto-panel hidden" id="autoPanel">
+      <h3>Automação</h3>
+      <p class="hint">Os mesmos valores dos Dados gerais. Faturamento sempre no dia 1 do mês seguinte ao término (da OS ou de cada fase). Valor da OS dividido pelo número de fases.</p>
+      <div class="field"><label for="autoValor">Valor da OS</label><input id="autoValor" inputmode="decimal" placeholder="R$ 0,00"></div>
+      <div class="two">
+        <div class="field"><label for="autoInicio">Data de Início</label><input id="autoInicio" type="date"></div>
+        <div class="field"><label for="autoTermino">Data de Término</label><input id="autoTermino" type="date"></div>
+      </div>
+      <label>Faturamento</label>
+      <div class="seg" id="autoBillMode" style="grid-template-columns:1fr 1fr;margin:0 0 12px">
+        <button type="button" data-bill-mode="os">Por OS</button>
+        <button type="button" data-bill-mode="fase">Por fase</button>
+      </div>
+      <div class="field"><label>Datas previstas de faturamento</label><div id="autoFatDates"></div></div>
+      <div class="two">
+        <div class="field"><label>Valor faturado</label><input id="autoValorFaturado" readonly></div>
+        <div class="field"><label>Valor a faturar</label><input id="autoValorAFaturar" readonly></div>
+      </div>
+      <h3 style="margin-top:14px">Visão e estratégia</h3>
+      <div class="field"><label for="autoVisao">Visão do produto</label><textarea id="autoVisao"></textarea></div>
+      <div class="field"><label for="autoProblema">Problema que será resolvido</label><textarea id="autoProblema"></textarea></div>
+      <div class="field"><label for="autoPublico">Público e stakeholders</label><textarea id="autoPublico"></textarea></div>
+      <div class="field"><label for="autoProposta">Proposta de valor</label><textarea id="autoProposta"></textarea></div>
+      <div class="field"><label for="autoObjetivos">Objetivos e resultados esperados</label><textarea id="autoObjetivos"></textarea></div>
+      <div class="field"><label for="autoIndicadores">Indicadores de sucesso</label><textarea id="autoIndicadores"></textarea></div>
+      <div class="field"><label for="autoLimites">Limites e fora do escopo</label><textarea id="autoLimites"></textarea></div>
+      <div class="field"><label for="autoHipotese">Hipóteses e premissas</label><textarea id="autoHipotese"></textarea></div>
+      <div class="field"><label for="autoAlinhamento">Alinhamento com contrato e estratégia da organização</label><textarea id="autoAlinhamento"></textarea></div>
+    </div>
+  </main>
+</div>
+  </div>
+  <div class="view-panel hidden" id="viewBacklog">
+    <div class="backlog-app">
+      <div class="backlog-main">
+        <div class="bl-toolbar">
+          <div class="bl-filters">
+            <input id="blSearch" placeholder="Buscar...">
+            <select id="blFilterType"><option value="">Todos os tipos</option></select>
+            <select id="blFilterStatus">
+              <option value="">Todos os status</option>
+              <option value="em_refinamento">Em refinamento</option>
+              <option value="discovery">Discovery</option>
+              <option value="precisa_dividir">Precisa dividir</option>
+              <option value="ready">Ready</option>
+              <option value="devolvido">Devolvido</option>
+              <option value="bloqueado">Bloqueado</option>
+            </select>
+            <select id="blGroupBy">
+              <option value="tree">Hierarquia (pai → filho)</option>
+              <option value="type">Agrupar por tipo</option>
+              <option value="module">Agrupar por módulo</option>
+              <option value="prio">Agrupar por prioridade</option>
+            </select>
+          </div>
+          <div class="toolbar-actions">
+            <button class="btn small" id="blToggleTreeBtn" type="button">Ocultar backlog</button>
+            <button class="btn small" id="blExpandAll">Expandir</button>
+            <button class="btn small" id="blCollapseAll">Recolher</button>
+            <button class="btn small" id="blExportBtn">Salvar backlog</button>
+            <button class="btn small" id="blImportBtn">Carregar backlog</button>
+            <button class="btn small" id="blSeedBtn">Exemplo Atlas</button>
+            <input class="file-input" id="blImportFile" type="file" accept=".json,application/json">
+          </div>
+        </div>
+        <div class="bl-outcome" id="blOutcome"></div>
+        <div class="bl-board" id="blBoard"></div>
+      </div>
+      <aside class="backlog-side">
+        <div class="brand" style="margin-bottom:8px"><h1 style="font-size:1.25rem">Preencher PBI</h1><p style="margin:4px 0 0">Campos lado a lado. O ? explica cada um.</p></div>
+        <button class="btn small" id="blShowTreeBtn" type="button">Mostrar backlog</button>
+        <div class="field" style="margin-bottom:6px"><label>Tipo <button type="button" class="help-i" data-help="type" aria-label="Ajuda: Tipo">?</button></label></div>
+        <div class="type-grid" id="blTypeGrid"></div>
+        <input type="hidden" id="blEditId" value="">
+        <div class="bl-form-grid">
+          <div class="field bl-span-2"><label for="blTitle">Título <button type="button" class="help-i" data-help="title" aria-label="Ajuda">?</button></label><input id="blTitle" placeholder="Ex.: Enviar catálogo"></div>
+          <div class="field"><label for="blParent">Pai (Feature) <button type="button" class="help-i" data-help="parent" aria-label="Ajuda">?</button></label><select id="blParent"></select></div>
+          <div class="field"><label for="blPrio">Prioridade <button type="button" class="help-i" data-help="prio" aria-label="Ajuda">?</button></label>
+            <select id="blPrio">
+              <option value="média">Média</option>
+              <option value="baixa">Baixa</option>
+              <option value="alta">Alta</option>
+              <option value="crítica">Crítica</option>
+            </select>
+          </div>
+          <div class="field"><label for="blStatus">Status <button type="button" class="help-i" data-help="status" aria-label="Ajuda">?</button></label>
+            <select id="blStatus">
+              <option value="em_refinamento">Em refinamento</option>
+              <option value="discovery">Discovery</option>
+              <option value="precisa_dividir">Precisa dividir</option>
+              <option value="ready">Ready</option>
+              <option value="devolvido">Devolvido</option>
+              <option value="bloqueado">Bloqueado</option>
+            </select>
+          </div>
+          <div class="field"><label for="blEstimate">Estimativa <button type="button" class="help-i" data-help="estimate" aria-label="Ajuda">?</button></label><input id="blEstimate" placeholder="5, M, 8h"></div>
+          <div class="field"><label for="blSize">Tamanho <button type="button" class="help-i" data-help="size" aria-label="Ajuda">?</button></label>
+            <select id="blSize">
+              <option value="">—</option>
+              <option value="cabe">Cabe em 1 sprint</option>
+              <option value="dividir">Precisa dividir</option>
+              <option value="grande">Grande demais</option>
+            </select>
+          </div>
+          <div class="field"><label for="blOwner">Responsável <button type="button" class="help-i" data-help="owner" aria-label="Ajuda">?</button></label><input id="blOwner" placeholder="Quem decide / ajusta"></div>
+          <div class="field"><label for="blOwnerDue">Prazo <button type="button" class="help-i" data-help="ownerDue" aria-label="Ajuda">?</button></label><input id="blOwnerDue" type="date"></div>
+
+          <div class="bl-sec">Contexto</div>
+          <div class="field"><label for="blObjective">Objetivo / problema <button type="button" class="help-i" data-help="objective" aria-label="Ajuda">?</button></label><textarea id="blObjective" placeholder="Por que desenvolver?"></textarea></div>
+          <div class="field"><label for="blValue">Valor <button type="button" class="help-i" data-help="value" aria-label="Ajuda">?</button></label><textarea id="blValue" placeholder="Benefício ao usuário/negócio"></textarea></div>
+          <div class="field"><label for="blUser">Usuário <button type="button" class="help-i" data-help="user" aria-label="Ajuda">?</button></label><textarea id="blUser" placeholder="Quem usa ou é afetado"></textarea></div>
+          <div class="field"><label for="blFlow">Fluxo <button type="button" class="help-i" data-help="flow" aria-label="Ajuda">?</button></label><textarea id="blFlow" placeholder="Início → etapas → fim"></textarea></div>
+          <div class="field"><label for="blScopeIn">Escopo (entra) <button type="button" class="help-i" data-help="scopeIn" aria-label="Ajuda">?</button></label><textarea id="blScopeIn"></textarea></div>
+          <div class="field"><label for="blScopeOut">Fora do escopo <button type="button" class="help-i" data-help="scopeOut" aria-label="Ajuda">?</button></label><textarea id="blScopeOut"></textarea></div>
+          <div class="field"><label for="blProcessNow">Processo atual <button type="button" class="help-i" data-help="processNow" aria-label="Ajuda">?</button></label><textarea id="blProcessNow"></textarea></div>
+          <div class="field"><label for="blProcessNext">Processo futuro <button type="button" class="help-i" data-help="processNext" aria-label="Ajuda">?</button></label><textarea id="blProcessNext"></textarea></div>
+          <div class="field"><label for="blPrototype">Protótipo / fluxo <button type="button" class="help-i" data-help="prototype" aria-label="Ajuda">?</button></label><textarea id="blPrototype" placeholder="Link + telas e mensagens"></textarea></div>
+
+          <div class="bl-sec">Requisitos</div>
+          <div class="field"><label for="blRequirements">Requisitos <button type="button" class="help-i" data-help="requirements" aria-label="Ajuda">?</button></label><textarea id="blRequirements"></textarea></div>
+          <div class="field"><label for="blRules">Regras de negócio <button type="button" class="help-i" data-help="rules" aria-label="Ajuda">?</button></label><textarea id="blRules"></textarea></div>
+          <div class="field"><label for="blData">Dados <button type="button" class="help-i" data-help="data" aria-label="Ajuda">?</button></label><textarea id="blData"></textarea></div>
+          <div class="field"><label for="blPermissions">Permissões <button type="button" class="help-i" data-help="permissions" aria-label="Ajuda">?</button></label><textarea id="blPermissions"></textarea></div>
+          <div class="field"><label for="blIntegrations">Integrações <button type="button" class="help-i" data-help="integrations" aria-label="Ajuda">?</button></label><textarea id="blIntegrations"></textarea></div>
+          <div class="field"><label for="blExceptions">Exceções <button type="button" class="help-i" data-help="exceptions" aria-label="Ajuda">?</button></label><textarea id="blExceptions"></textarea></div>
+          <div class="field"><label for="blDependencies">Dependências <button type="button" class="help-i" data-help="dependencies" aria-label="Ajuda">?</button></label><textarea id="blDependencies"></textarea></div>
+          <div class="field"><label for="blNfr">Não funcionais <button type="button" class="help-i" data-help="nfr" aria-label="Ajuda">?</button></label><textarea id="blNfr"></textarea></div>
+          <div class="field"><label for="blRisks">Riscos <button type="button" class="help-i" data-help="risks" aria-label="Ajuda">?</button></label><textarea id="blRisks"></textarea></div>
+          <div class="field bl-span-2"><label for="blAccept">Critérios de aceitação (um por linha) <button type="button" class="help-i" data-help="accept" aria-label="Ajuda">?</button></label><textarea id="blAccept" placeholder="Obrigatórios preenchidos&#10;Mensagem se API indisponível&#10;Registrar usuário, data e ação"></textarea></div>
+          <div class="field"><label for="blDoubts">Dúvidas / decisões <button type="button" class="help-i" data-help="doubts" aria-label="Ajuda">?</button></label><textarea id="blDoubts"></textarea></div>
+          <div class="field bl-span-3"><label for="blLinks">Links e referências <button type="button" class="help-i" data-help="links" aria-label="Ajuda">?</button></label><input id="blLinks" placeholder="URL de docs, Figma, Miro..."></div>
+
+          <div class="bl-sec">Definition of Ready <button type="button" class="help-i" data-help="dor" aria-label="Ajuda: DoR">?</button></div>
+          <div class="bl-span-3"><div class="dor-box" id="blDorBox"></div><div id="blDorResult"></div></div>
+
+          <div class="bl-form-actions">
+            <button class="btn primary" id="blSaveBtn">+ Capturar</button>
+            <button class="btn" id="blClearBtn" type="button">Limpar</button>
+            <span class="hint" id="blCountHint" style="margin:0"></span>
+          </div>
+        </div>
+      </aside>
+    </div>
+  </div>
+  </div>
+</div>
+<div id="blHelpPop" class="help-pop hidden" role="tooltip"></div>
+<script>
+"use strict";
+
+const STORAGE_KEY = "roadmap-projetos-v14";
+const SEED = {"name": "Portal Parceiro / Cliente", "start": "2026-07-07", "end": "2026-10-01", "scale": "day", "laneHeight": 96, "lanes": 3, "selected": {"type": "marker", "id": "ljb6z1hb"}, "phases": [{"id": "amfac3nf", "name": "Fase 1", "start": "2026-07-07", "end": "2026-07-29", "lane": 0, "color": "blue", "text": "Organiza\u00e7\u00e3o\nPessoa\nCargo\nTipo de Documento\nTemplate Documental\nAssinatura\nNotifica\u00e7\u00f5es\nPortal Parceiro", "value": 0}, {"id": "ehwx4zh6", "name": "Fase 2", "start": "2026-08-03", "end": "2026-08-19", "lane": 1, "color": "bright", "text": "Cadastro de Produtos\nCat\u00e1logo Versionado\nCat\u00e1logo Universal\nTelas de Gest\u00e3o\nHomologa\u00e7\u00e3o MTI/DIREX\nImporta\u00e7\u00e3o CSV\nP\u00e1gina do Cliente \u00b7 OS\nPortal Cliente e Parceiro", "value": 0}, {"id": "ojr4xciy", "name": "Comercial & Integra\u00e7\u00f5es", "start": "2026-08-24", "end": "2026-09-23", "lane": 2, "color": "ice", "text": "Fluxo Comercial\nDossi\u00ea de Entrega de Valor\nAutogest\u00e3o Tripla: Vis\u00f5es MTI \u00b7 Parceiro \u00b7 Cliente\nPedidos \u00b7 NF \u00b7 DAR \u00b7 Pagamentos\nConvite de Cadastro\nIntegra\u00e7\u00f5es: Protheus \u00b7 ServiceNow \u00b7 HCMX", "value": 0}], "homologs": [{"id": "kuzfey38", "name": "HML", "start": "2026-07-30", "end": "2026-07-31", "lane": 0, "color": "peach"}, {"id": "5c7yyalc", "name": "HML", "start": "2026-08-20", "end": "2026-08-21", "lane": 1, "color": "peach"}, {"id": "bqdbesln", "name": "HML", "start": "2026-09-24", "end": "2026-09-30", "lane": 2, "color": "peach"}], "billings": [], "markers": [{"id": "plp6gbts", "name": "FAT", "date": "2026-07-31", "value": 138167.55, "color": "red"}, {"id": "l04g2qtj", "name": "FAT", "date": "2026-09-01", "value": 171327.76, "color": "red"}, {"id": "ljb6z1hb", "name": "FAT", "date": "2026-10-01", "value": 49740.32, "color": "red"}], "meta": {"codigo": "019", "nome": "Painel de Autogest\u00e3o Tr\u00edplice - M\u00f3dulo 1", "centroCusto": "MTI | Autoconsumo - Servi\u00e7os e Solu\u00e7\u00f5es Digitais", "ordemDev": "Painel de Autogest\u00e3o Triplice", "valor": 138167.55, "dataInicio": "2026-07-07", "dataTermino": "2026-07-31", "dataPrevFat": "2026-08-01", "status": "Faturado / 6", "tsl": "Fernanda Iwasaka", "dso": "Lucas Santos", "valorFaturado": 138167.55, "valorAFaturar": 221068.08000000002, "dataPrevFats": ["2026-08-01", "2026-09-01", "2026-10-01"]}, "accordion": {"projeto": true, "dados": true, "feriados": false, "sprints": false, "itens": false, "fases": false, "hml": false, "cob": true, "marc": true, "arquivo": true}, "hideWeekends": true, "hideHolidays": false, "todayColor": "soft", "holidays": [{"id": "ym7gnxny", "date": "2026-01-01", "name": "Confraterniza\u00e7\u00e3o Universal", "hidden": false}, {"id": "8o3ohked", "date": "2026-02-16", "name": "Carnaval", "hidden": false}, {"id": "gemg7ptp", "date": "2026-02-17", "name": "Carnaval", "hidden": false}, {"id": "m0iu169n", "date": "2026-04-03", "name": "Sexta-feira Santa", "hidden": false}, {"id": "05pkdxdh", "date": "2026-04-21", "name": "Tiradentes", "hidden": false}, {"id": "st4qc48w", "date": "2026-05-01", "name": "Dia do Trabalho", "hidden": false}, {"id": "p4iapum4", "date": "2026-06-04", "name": "Corpus Christi", "hidden": false}, {"id": "00kpdldt", "date": "2026-09-07", "name": "Independ\u00eancia", "hidden": false}, {"id": "jgjw4g3i", "date": "2026-10-12", "name": "Nossa Senhora Aparecida", "hidden": false}, {"id": "qasixxpk", "date": "2026-11-02", "name": "Finados", "hidden": false}, {"id": "lip9qxfn", "date": "2026-11-15", "name": "Proclama\u00e7\u00e3o da Rep\u00fablica", "hidden": false}, {"id": "xeze3bud", "date": "2026-11-20", "name": "Consci\u00eancia Negra", "hidden": false}, {"id": "hl6rwhgj", "date": "2026-12-25", "name": "Natal", "hidden": false}], "compact": true, "viewMode": "compact", "laneHeightPrev": 288, "sprints": [{"id": "yhvxi2xb", "name": "39 Sprint", "number": 39, "start": "2026-08-10", "end": "2026-08-21"}, {"id": "xn8kv18h", "name": "40 Sprint", "number": 40, "start": "2026-08-24", "end": "2026-09-04"}, {"id": "z02xpjd9", "name": "41 Sprint", "number": 41, "start": "2026-09-08", "end": "2026-09-18"}, {"id": "afuna4x5", "name": "42 Sprint", "number": 42, "start": "2026-09-21", "end": "2026-10-02"}, {"id": "zrera59x", "name": "43 Sprint", "number": 43, "start": "2026-10-05", "end": "2026-10-16"}, {"id": "1u4iu60l", "name": "44 Sprint", "number": 44, "start": "2026-10-19", "end": "2026-10-30"}, {"id": "qzeooxry", "name": "45 Sprint", "number": 45, "start": "2026-11-02", "end": "2026-11-13"}, {"id": "sruss7j7", "name": "46 Sprint", "number": 46, "start": "2026-11-16", "end": "2026-11-27"}, {"id": "sb2a9sx1", "name": "47 Sprint", "number": 47, "start": "2026-11-30", "end": "2026-12-11"}], "auto": {"billingMode": "fase", "visaoProduto": "", "problema": "", "publico": "", "propostaValor": "", "objetivos": "", "indicadores": "", "limites": "", "hipotese": "", "alinhamento": ""}, "laneNames": ["Raia 1", "Raia 2", "Raia 3"]};
+const COLORS = {
+  blue:"#0C1BA8",navy:"#04223D",bright:"#2E78D3",steel:"#536FA7",soft:"#5FA3CD",
+  ice:"#C9DCF2",mint:"#C8F4C3",periwinkle:"#969DFF",coral:"#FFC3BB",
+  peach:"#FFDEBD",lavender:"#E6D4F4",red:"#E11D2E"
+};
+const LIGHT_COLORS = new Set(["ice","mint","coral","peach","lavender"]);
+const TYPE_COLLECTION = {phase:"phases",homolog:"homologs",billing:"billings",marker:"markers"};
+const MONTHS = ["jan.","fev.","mar.","abr.","mai.","jun.","jul.","ago.","set.","out.","nov.","dez."];
+const WEEKDAYS = ["dom.","seg.","ter.","qua.","qui.","sex.","sáb."];
+const $ = (s,root=document) => root.querySelector(s);
+const $$ = (s,root=document) => [...root.querySelectorAll(s)];
+const clone = value => JSON.parse(JSON.stringify(value));
+const uid = () => Math.random().toString(36).slice(2,10);
+const parseDate = s => { const [y,m,d]=String(s).split("-").map(Number); return new Date(y,m-1,d,12); };
+const isoDate = d => `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}-${String(d.getDate()).padStart(2,"0")}`;
+const addDays = (d,n) => { const x=new Date(d); x.setDate(x.getDate()+n); return x; };
+const clamp = (v,min,max) => Math.max(min,Math.min(max,v));
+const money = v => Number(v||0).toLocaleString("pt-BR",{style:"currency",currency:"BRL",minimumFractionDigits:2,maximumFractionDigits:2});
+const parseMoney = s => {
+  if(typeof s==="number") return s;
+  let t=String(s??"").trim();
+  if(!t) return 0;
+  t=t.replace(/R\$\s?/gi,"").replace(/\s/g,"");
+  if(t.includes(",")&&t.includes(".")) t=t.replace(/\./g,"").replace(",",".");
+  else if(t.includes(",")) t=t.replace(",",".");
+  const n=Number(t);
+  return Number.isFinite(n)?n:0;
+};
+const formatMoneyInput = v => Number(v||0).toLocaleString("pt-BR",{minimumFractionDigits:2,maximumFractionDigits:2});
+const shortDate = s => parseDate(s).toLocaleDateString("pt-BR",{day:"2-digit",month:"2-digit"});
+const escapeHtml = s => String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[c]));
+const isWeekend = d => [0,6].includes(d.getDay());
+const todayIso = () => isoDate(new Date());
+
+function easterSunday(year){
+  const a=year%19,b=Math.floor(year/100),c=year%100,d=Math.floor(b/4),e=b%4;
+  const f=Math.floor((b+8)/25),g=Math.floor((b-f+1)/3),h=(19*a+b-d-g+15)%30;
+  const i=Math.floor(c/4),k=c%4,l=(32+2*e+2*i-h-k)%7,m=Math.floor((a+11*h+22*l)/451);
+  const month=Math.floor((h+l-7*m+114)/31),day=((h+l-7*m+114)%31)+1;
+  return new Date(year,month-1,day,12);
+}
+function defaultHolidaysForYears(years){
+  const out=[];
+  years.forEach(year=>{
+    const fixed=[
+      ["01-01","Confraternização Universal"],["04-21","Tiradentes"],["05-01","Dia do Trabalho"],
+      ["09-07","Independência"],["10-12","Nossa Senhora Aparecida"],["11-02","Finados"],
+      ["11-15","Proclamação da República"],["11-20","Consciência Negra"],["12-25","Natal"]
+    ];
+    fixed.forEach(([md,name])=>out.push({id:uid(),date:`${year}-${md}`,name,hidden:false}));
+    const easter=easterSunday(year);
+    [[-48,"Carnaval"],[-47,"Carnaval"],[-2,"Sexta-feira Santa"],[60,"Corpus Christi"]].forEach(([off,name])=>{
+      out.push({id:uid(),date:isoDate(addDays(easter,off)),name,hidden:false});
+    });
+  });
+  out.sort((a,b)=>a.date.localeCompare(b.date));
+  return out;
+}
+function holidayMap(state){
+  const map=new Map();
+  (state.holidays||[]).forEach(h=>{
+    if(!h.hidden) map.set(h.date,h.name||"Feriado");
+  });
+  return map;
+}
+/** Todos os feriados cadastrados (mesmo ocultos no timeline) — usados na contagem de dias úteis. */
+function holidayDatesForCounting(state){
+  const set=new Set();
+  (state.holidays||[]).forEach(h=>{ if(h&&h.date) set.add(h.date); });
+  return set;
+}
+function isNonWorkingDay(d, holidaySet){
+  if(isWeekend(d)) return true;
+  const set=holidaySet||holidayDatesForCounting(state);
+  return set.has(isoDate(d));
+}
+/** Dias úteis inclusivos: exclui finais de semana e feriados. */
+function businessDaysInclusive(startIso,endIso){
+  if(!startIso||!endIso) return 0;
+  let a=parseDate(startIso),b=parseDate(endIso);
+  if(b<a)[a,b]=[b,a];
+  const holidays=holidayDatesForCounting(state);
+  let n=0;
+  for(let d=a;d<=b;d=addDays(d,1)) if(!isNonWorkingDay(d,holidays)) n++;
+  return n;
+}
+
+function normalize(raw){
+  const data = raw && typeof raw==="object" ? clone(raw) : clone(SEED);
+  data.name ||= SEED.name;
+  data.start = /^\d{4}-\d{2}-\d{2}$/.test(data.start||"") ? data.start : SEED.start;
+  data.end = /^\d{4}-\d{2}-\d{2}$/.test(data.end||"") ? data.end : SEED.end;
+  if(data.end<data.start) [data.start,data.end]=[data.end,data.start];
+  data.scale = ["day","week","month"].includes(data.scale) ? data.scale : "week";
+  data.laneHeight = clamp(Number(data.laneHeight)||288,72,480);
+  data.lanes = clamp(Number(data.lanes)||4,1,12);
+  data.hideWeekends = !!data.hideWeekends;
+  data.hideHolidays = !!data.hideHolidays;
+  data.viewMode = ["compact","medium","wide"].includes(data.viewMode)
+    ? data.viewMode
+    : (data.compact ? "compact" : "medium");
+  data.compact = data.viewMode === "compact";
+  data.laneHeightPrev = clamp(Number(data.laneHeightPrev)||288,120,480);
+  data.todayColor = COLORS[data.todayColor] ? data.todayColor : "red";
+  if(data.compact) data.laneHeight = clamp(Number(data.laneHeight)||96,72,140);
+  data.phases = Array.isArray(data.phases)?data.phases:[];
+  data.homologs = Array.isArray(data.homologs)?data.homologs:[];
+  data.billings = Array.isArray(data.billings)?data.billings:[];
+  data.markers = Array.isArray(data.markers)?data.markers:[];
+  data.phases = data.phases.map(x=>({...x,id:x.id||uid(),name:x.name||"Fase",value:parseMoney(x.value),color:x.color||"blue",lane:clamp(Number(x.lane)||0,0,data.lanes-1)}));
+  data.homologs = data.homologs.map(x=>({...x,id:x.id||uid(),name:x.name||"HML",color:x.color||"navy",lane:clamp(Number(x.lane)||0,0,data.lanes-1)}));
+  data.billings = data.billings.map(x=>{
+    let date=x.date;
+    if(String(date).startsWith("2025-")&&String(data.start).startsWith("2026-")) date="2026-"+date.slice(5);
+    return {...x,id:x.id||uid(),name:x.name||"Cobrança",date,color:x.color||"bright",value:parseMoney(x.value),lane:clamp(Number(x.lane)||0,0,data.lanes-1),auto:!!x.auto};
+  });
+  data.markers = data.markers.map(x=>({...x,id:x.id||uid(),name:x.name||"Marcação",date:x.date||data.start,color:x.color||"red",value:parseMoney(x.value)}));
+  data.sprints = Array.isArray(data.sprints)?data.sprints:[];
+  data.sprints = data.sprints.map(s=>{
+    let start=s.start||data.start, end=s.end||start;
+    if(end<start)[start,end]=[end,start];
+    return {id:s.id||uid(),name:`${Number(s.number)||1} Sprint`,number:Number(s.number)||1,start,end};
+  }).sort((a,b)=>a.start.localeCompare(b.start)||a.number-b.number);
+  data.meta = Object.assign({
+    codigo:"",nome:"",centroCusto:"",ordemDev:"",valor:0,
+    dataInicio:data.start,dataTermino:data.end,dataPrevFat:"",status:"",tsl:"",dso:"",valorFaturado:0,valorAFaturar:0
+  }, data.meta||{});
+  data.meta.dataInicio = /^\d{4}-\d{2}-\d{2}$/.test(data.meta.dataInicio||"") ? data.meta.dataInicio : data.start;
+  data.meta.dataTermino = /^\d{4}-\d{2}-\d{2}$/.test(data.meta.dataTermino||"") ? data.meta.dataTermino : data.end;
+  data.sidebarHidden=!!data.sidebarHidden;
+  data.meta.valor = parseMoney(data.meta.valor);
+  data.meta.valorFaturado = parseMoney(data.meta.valorFaturado);
+  data.auto = Object.assign({
+    billingMode:"fase", visaoProduto:"", problema:"", publico:"", propostaValor:"",
+    objetivos:"", indicadores:"", limites:"", hipotese:"", alinhamento:""
+  }, data.auto||{});
+  if(!Array.isArray(data.laneNames)) data.laneNames=[];
+  while(data.laneNames.length<data.lanes) data.laneNames.push(`Raia ${data.laneNames.length+1}`);
+  data.laneNames=data.laneNames.slice(0,data.lanes);
+  data.accordion = Object.assign({projeto:true,dados:true,feriados:true,sprints:true,itens:true,fases:true,hml:true,cob:true,marc:true,arquivo:true}, data.accordion||{});
+  const y0=parseDate(data.start).getFullYear(), y1=parseDate(data.end).getFullYear();
+  const years=[]; for(let y=y0;y<=y1;y++) years.push(y);
+  if(!Array.isArray(data.holidays)||!data.holidays.length){
+    data.holidays = defaultHolidaysForYears(years);
+  }else{
+    data.holidays = data.holidays.map(h=>({id:h.id||uid(),date:h.date,name:h.name||"Feriado",hidden:!!h.hidden}));
+  }
+  const all=[...data.phases,...data.homologs];
+  all.forEach(x=>{x.start=x.start||data.start;x.end=x.end||x.start;if(x.end<x.start)[x.start,x.end]=[x.end,x.start];});
+  expandTimelineToContent(data);
+  data.meta.dataInicio=data.start;
+  data.meta.dataTermino=data.end;
+  return data;
+}
+
+function load(){
+  try{
+    const raw=localStorage.getItem(STORAGE_KEY);
+    return normalize(raw?JSON.parse(raw):SEED);
+  }catch(error){
+    console.warn("Dados locais inválidos; carregando seed.",error);
+    return normalize(SEED);
+  }
+}
+let state=load();
+let blHideTree=false;
+try{blHideTree=localStorage.getItem("roadmap-backlog-tree-hidden")==="1";}catch(e){}
+let columns=[],colWidth=140,rendering=false,lastBoardWidth=0,resizeTimer=0;
+let drag=null,popoverAnchor=null;
+
+function persist(){
+  try{localStorage.setItem(STORAGE_KEY,JSON.stringify(state));}
+  catch(error){console.warn("Não foi possível salvar localmente.",error);}
+}
+function getItem(type,id){return (state[TYPE_COLLECTION[type]]||[]).find(x=>x.id===id);}
+function colorOf(key){return COLORS[key]||COLORS.blue;}
+function textColor(key){return LIGHT_COLORS.has(key)?"#272727":"#fff";}
+function isoWeek(date){
+  const d=new Date(Date.UTC(date.getFullYear(),date.getMonth(),date.getDate()));
+  d.setUTCDate(d.getUTCDate()+4-(d.getUTCDay()||7));
+  const yearStart=new Date(Date.UTC(d.getUTCFullYear(),0,1));
+  return Math.ceil((((d-yearStart)/86400000)+1)/7);
+}
+function monday(date){
+  const d=new Date(date),day=d.getDay()||7;
+  return addDays(d,1-day);
+}
+function clipDate(d,min,max){
+  if(d<min) return new Date(min);
+  if(d>max) return new Date(max);
+  return new Date(d);
+}
+function buildColumns(){
+  const start=parseDate(state.start),end=parseDate(state.end),out=[];
+  const hmap=holidayMap(state);
+  if(state.scale==="day"){
+    for(let d=start;d<=end;d=addDays(d,1)){
+      const weekend=isWeekend(d);
+      if(state.hideWeekends&&weekend) continue;
+      const iso=isoDate(d);
+      const holidayName=(!state.hideHolidays && hmap.has(iso)) ? hmap.get(iso) : null;
+      out.push({start:new Date(d),end:new Date(d),weekend,holiday:!!holidayName,holidayName});
+    }
+  }else if(state.scale==="week"){
+    // Colunas recortadas no início/fim informados (não começa na segunda anterior)
+    for(let d=monday(start);d<=end;d=addDays(d,7)){
+      const rawStart=new Date(d), rawEnd=addDays(d,6);
+      const clippedStart=clipDate(rawStart,start,end);
+      const clippedEnd=clipDate(rawEnd,start,end);
+      if(clippedStart>clippedEnd) continue;
+      out.push({start:clippedStart,end:clippedEnd,weekend:false,holiday:false});
+    }
+  }else{
+    // Meses recortados no início/fim informados (ex.: fim em 01/11 → só 01/11)
+    for(let d=new Date(start.getFullYear(),start.getMonth(),1,12);d<=end;d=new Date(d.getFullYear(),d.getMonth()+1,1,12)){
+      const rawStart=new Date(d);
+      const rawEnd=new Date(d.getFullYear(),d.getMonth()+1,0,12);
+      const clippedStart=clipDate(rawStart,start,end);
+      const clippedEnd=clipDate(rawEnd,start,end);
+      if(clippedStart>clippedEnd) continue;
+      out.push({start:clippedStart,end:clippedEnd,weekend:false,holiday:false});
+    }
+  }
+  return out.length?out:[{start,end,weekend:false,holiday:false}];
+}
+function visibleTimelineBounds(){
+  if(!columns.length) return {from:state.start,to:state.end};
+  return {from:isoDate(columns[0].start),to:isoDate(columns[columns.length-1].end)};
+}
+function columnIndex(dateString){
+  const d=parseDate(dateString).getTime();
+  let idx=columns.findIndex(c=>d>=c.start.getTime()&&d<=c.end.getTime());
+  if(idx<0){
+    // hidden weekend day: snap to nearest visible column
+    let best=0,bestDist=Infinity;
+    columns.forEach((c,i)=>{
+      const mid=(c.start.getTime()+c.end.getTime())/2;
+      const dist=Math.abs(mid-d);
+      if(dist<bestDist){bestDist=dist;best=i;}
+    });
+    idx=best;
+  }
+  return idx;
+}
+function daysInColumn(c){
+  return Math.round((c.end.getTime()-c.start.getTime())/86400000)+1;
+}
+/** Pixel X at the start of a calendar day (fractional within week/month columns). */
+function xAtDayStart(dateString){
+  const d=parseDate(dateString);
+  const idx=columnIndex(dateString);
+  const c=columns[idx];
+  if(state.scale==="day") return idx*colWidth;
+  const days=daysInColumn(c);
+  const offset=Math.round((d.getTime()-c.start.getTime())/86400000);
+  const frac=clamp(offset/days,0,1);
+  return idx*colWidth + frac*colWidth;
+}
+/** Pixel X at the end of a calendar day (inclusive). */
+function xAtDayEnd(dateString){
+  const d=parseDate(dateString);
+  const idx=columnIndex(dateString);
+  const c=columns[idx];
+  if(state.scale==="day") return (idx+1)*colWidth;
+  const days=daysInColumn(c);
+  const offset=Math.round((d.getTime()-c.start.getTime())/86400000);
+  const frac=clamp((offset+1)/days,0,1);
+  return idx*colWidth + frac*colWidth;
+}
+function rangeStyle(start,end){
+  const left=xAtDayStart(start);
+  const right=xAtDayEnd(end);
+  return {left,width:Math.max(10,right-left)};
+}
+function pointStyle(dateString){
+  const left=xAtDayStart(dateString);
+  const right=xAtDayEnd(dateString);
+  return {left,width:Math.max(10,right-left)};
+}
+function dateAtPixel(x){
+  if(!columns.length) return state.start;
+  const idx=clamp(Math.floor(x/colWidth),0,columns.length-1);
+  const c=columns[idx];
+  if(state.scale==="day") return isoDate(c.start);
+  const days=daysInColumn(c);
+  const frac=clamp((x-idx*colWidth)/colWidth,0,0.9999);
+  const dayOffset=Math.floor(frac*days);
+  let d=addDays(c.start,dayOffset);
+  if(d<parseDate(state.start)) d=parseDate(state.start);
+  if(d>parseDate(state.end)) d=parseDate(state.end);
+  if(state.hideWeekends&&isWeekend(d)){
+    const step=1;
+    while(isWeekend(d)&&d<=parseDate(state.end)) d=addDays(d,step);
+  }
+  return isoDate(d);
+}
+function dateForColumn(index,edge="start"){
+  const c=columns[clamp(index,0,columns.length-1)];
+  let d=edge==="end"?c.end:c.start;
+  if(state.scale==="day"&&isWeekend(d)&&!state.hideWeekends){
+    const step=edge==="end"?-1:1;
+    while(isWeekend(d)) d=addDays(d,step);
+  }
+  d=d<parseDate(state.start)?parseDate(state.start):d;
+  d=d>parseDate(state.end)?parseDate(state.end):d;
+  return isoDate(d);
+}
+function sprintForDate(dateIso){
+  const list=state.sprints||[];
+  const hits=list.filter(s=>s.start<=dateIso&&dateIso<=s.end);
+  if(!hits.length) return null;
+  return hits.sort((a,b)=>b.number-a.number)[0];
+}
+function sprintForColumn(c){
+  const startIso=isoDate(c.start), endIso=isoDate(c.end);
+  const list=state.sprints||[];
+  let best=null,bestOverlap=-1;
+  list.forEach(s=>{
+    const a=s.start>startIso?s.start:startIso;
+    const b=s.end<endIso?s.end:endIso;
+    if(a>b) return;
+    const overlap=Math.round((parseDate(b)-parseDate(a))/86400000)+1;
+    if(overlap>bestOverlap||(overlap===bestOverlap&&best&&s.number>best.number)){
+      best=s;bestOverlap=overlap;
+    }
+  });
+  return best||sprintForDate(startIso);
+}
+function columnLabel(c){
+  const sprint=sprintForColumn(c);
+  const sprintHtml=sprint?`<span class="hd-sprint" title="${escapeHtml(sprint.name)}">Sp ${sprint.number}</span>`:"";
+  if(state.scale==="day"){
+    const day=String(c.start.getDate()).padStart(2,"0");
+    const monthNum=String(c.start.getMonth()+1).padStart(2,"0");
+    const week=c.holiday&&c.holidayName
+      ? escapeHtml(String(c.holidayName).slice(0,6))
+      : WEEKDAYS[c.start.getDay()].replace(/\.$/,"");
+    return `${sprintHtml}<span class="hd-day">${day}</span><span class="hd-month">${monthNum}</span><span class="hd-week">${week}</span>`;
+  }
+  if(state.scale==="week"){
+    const a=String(c.start.getDate()).padStart(2,"0");
+    const b=String(c.end.getDate()).padStart(2,"0");
+    return `${sprintHtml}<span class="hd-top">S${isoWeek(c.start)}</span><span class="hd-sub">${a}–${b}</span>`;
+  }
+  return `${sprintHtml}<span class="hd-top">${MONTHS[c.start.getMonth()].replace(/\.$/,"")}</span><span class="hd-sub">${c.start.getFullYear()}</span>`;
+}
+function monthKey(d){return d.getFullYear()*12+d.getMonth();}
+/** Largura visível real do painel da timeline (não a largura do conteúdo). */
+function boardViewportWidth(){
+  const scroll=$("#boardScroll");
+  const wrap=$(".board-wrap");
+  const main=$(".main");
+  const side=$(".sidebar");
+  let w=0;
+  if(scroll){
+    const r=scroll.getBoundingClientRect();
+    w=Math.floor(r.width||scroll.clientWidth||0);
+  }
+  if(w<200&&wrap){
+    w=Math.floor(wrap.getBoundingClientRect().width||wrap.clientWidth||0);
+  }
+  if(w<200&&main){
+    w=Math.floor(main.getBoundingClientRect().width||0);
+  }
+  if(w<200){
+    const sideW=side?Math.floor(side.getBoundingClientRect().width):350;
+    // Resolução / janela atual menos a barra lateral e paddings do layout
+    w=Math.floor((window.innerWidth||screen.availWidth||screen.width||1280)-sideW-48);
+  }
+  return Math.max(280,w);
+}
+function calculateColWidth(){
+  const viewport=boardViewportWidth();
+  const n=Math.max(1,columns.length);
+  const mode=state.viewMode||(state.compact?"compact":"medium");
+  // Limites para não deixar semana/mês com colunas exageradamente vazias
+  const maxByScale=state.scale==="day"?120:state.scale==="week"?100:140;
+  if(mode==="wide"){
+    const fit=Math.max(1, Math.floor(viewport/n));
+    return state.scale==="day"?fit:Math.min(maxByScale,fit);
+  }
+  if(mode==="medium"){
+    const fit=Math.max(1, Math.floor((viewport*2)/n));
+    return state.scale==="day"?fit:Math.min(maxByScale,fit);
+  }
+  // Compacto
+  return state.scale==="day"?36:state.scale==="week"?72:96;
+}
+function monthBandsHtml(){
+  if(!columns.length) return "";
+  let html="",i=0,alt=0;
+  while(i<columns.length){
+    const key=monthKey(columns[i].start);
+    let j=i+1;
+    while(j<columns.length&&monthKey(columns[j].start)===key) j++;
+    html+=`<div class="month-band ${alt%2?"b":"a"}" style="left:${i*colWidth}px;width:${(j-i)*colWidth}px"></div>`;
+    alt++; i=j;
+  }
+  return html;
+}
+function itemPad(){return state.compact?8:28;}
+function itemHeight(){
+  const pad=itemPad();
+  return Math.max(state.compact?56:96, state.laneHeight-pad*2);
+}
+
+let renderQueued=false;
+function render(options={}){
+  if(rendering){renderQueued=true;return;}
+  rendering=true;
+  try{
+    columns=buildColumns();
+    colWidth=calculateColWidth();
+    document.documentElement.style.setProperty("--lane-h",`${state.laneHeight}px`);
+    document.documentElement.style.setProperty("--col-w",`${colWidth}px`);
+    renderControls();
+    renderLists();
+    renderHolidayList();
+    renderSprintList();
+    renderStats();
+    if(!options.skipBoard){
+      renderBoard();
+      // 2º passe: após o layout, medir de novo a viewport real da tela/painel
+      if(!options.skipFit && (state.viewMode==="wide"||state.viewMode==="medium")){
+        const corrected=calculateColWidth();
+        if(Math.abs(corrected-colWidth)>=1){
+          colWidth=corrected;
+          document.documentElement.style.setProperty("--col-w",`${colWidth}px`);
+          renderBoard();
+        }
+      }
+    }
+    persist();
+    applyLayoutFlags();
+  }finally{
+    rendering=false;
+    if(renderQueued){renderQueued=false;render(options);}
+  }
+}
+function setTimelineRange(start,end){
+  if(!/^\d{4}-\d{2}-\d{2}$/.test(start||"")) return;
+  if(!/^\d{4}-\d{2}-\d{2}$/.test(end||"")) return;
+  if(end<start) [start,end]=[end,start];
+  state.start=start;
+  state.end=end;
+  if(state.meta){state.meta.dataInicio=start;state.meta.dataTermino=end;}
+  popoverAnchor=null;
+  render();
+}
+function firstOfNextMonth(iso){
+  const d=parseDate(iso);
+  let y=d.getFullYear(), m=d.getMonth()+1;
+  if(m>11){m=0;y++;}
+  return `${y}-${String(m+1).padStart(2,"0")}-01`;
+}
+function moneyItems(){
+  const bills=state.billings||[];
+  const dates=new Set(bills.map(b=>b.date));
+  const extra=(state.markers||[]).filter(m=>Number(m.value)>0 && !dates.has(m.date));
+  return [...bills,...extra];
+}
+function applyPaidForecast(){
+  const today=todayIso();
+  const itens=moneyItems();
+  const faturado=itens.filter(x=>x.date<today).reduce((s,x)=>s+(Number(x.value)||0),0);
+  const aFaturar=itens.filter(x=>x.date>=today).reduce((s,x)=>s+(Number(x.value)||0),0);
+  state.meta.valorFaturado=faturado;
+  state.meta.valorAFaturar=aFaturar;
+  return {faturado,aFaturar,total:itens.reduce((s,x)=>s+(Number(x.value)||0),0)};
+}
+function isoShift(iso,days){
+  if(!/^\d{4}-\d{2}-\d{2}$/.test(iso||"")) return iso;
+  return isoDate(addDays(parseDate(iso),days));
+}
+function contentDateBounds(data){
+  const dates=[];
+  (data.phases||[]).forEach(x=>{if(x.start)dates.push(x.start);if(x.end)dates.push(x.end);});
+  (data.homologs||[]).forEach(x=>{if(x.start)dates.push(x.start);if(x.end)dates.push(x.end);});
+  (data.billings||[]).forEach(x=>{if(x.date)dates.push(x.date);});
+  (data.markers||[]).forEach(x=>{if(x.date)dates.push(x.date);});
+  (data.sprints||[]).forEach(x=>{if(x.start)dates.push(x.start);if(x.end)dates.push(x.end);});
+  const ok=dates.filter(d=>/^\d{4}-\d{2}-\d{2}$/.test(d||""));
+  if(!ok.length) return null;
+  return {min:ok.reduce((a,b)=>a<b?a:b), max:ok.reduce((a,b)=>a>b?a:b)};
+}
+function expandTimelineToContent(data){
+  const b=contentDateBounds(data);
+  if(!b) return;
+  if(b.min<data.start) data.start=b.min;
+  if(b.max>data.end) data.end=b.max;
+}
+function syncMetaToTimeline(){
+  if(!state.meta) state.meta={};
+  state.meta.dataInicio=state.start;
+  state.meta.dataTermino=state.end;
+}
+function applyLayoutFlags(){
+  const app=$(".app");
+  if(app) app.classList.toggle("hide-side", !!state.sidebarHidden);
+  const btn=$("#toggleSideBtn");
+  if(btn) btn.textContent=state.sidebarHidden?"Mostrar painel":"Ocultar painel";
+  const bl=$(".backlog-app");
+  if(bl) bl.classList.toggle("hide-tree", !!blHideTree);
+  const t=$("#blToggleTreeBtn");
+  if(t) t.textContent=blHideTree?"Mostrar backlog":"Ocultar backlog";
+}
+function syncAutoBillings(){
+  const mode=(state.auto&&state.auto.billingMode)||"fase";
+  const os=Number(state.meta.valor)||0;
+  const prev={};
+  (state.billings||[]).filter(x=>x.auto).forEach(b=>{ prev[b.phaseId||"os"]=b; });
+  const keep=(state.billings||[]).filter(x=>!x.auto);
+  const next=[];
+  if(mode==="os"){
+    const end=state.end;
+    if(/^\d{4}-\d{2}-\d{2}$/.test(end||"")){
+      const old=prev.os;
+      const date=(old&&old.dateManual&&old.date)?old.date:firstOfNextMonth(end);
+      next.push({id:old?.id||uid(),name:"Faturamento OS",date,value:os,color:"bright",lane:0,auto:true,phaseId:"os",dateManual:!!(old&&old.dateManual)});
+      state.meta.dataPrevFat=date;
+    }
+  }else{
+    const phases=[...state.phases].sort((a,b)=>(a.end||"").localeCompare(b.end||""));
+    const n=Math.max(1,phases.length);
+    const share=n?os/n:0;
+    const dates=[];
+    phases.forEach((p,i)=>{
+      const key=p.id;
+      const old=prev[key];
+      const calc=firstOfNextMonth(p.end||p.start);
+      const date=(old&&old.dateManual&&old.date)?old.date:calc;
+      dates.push(date);
+      next.push({id:old?.id||uid(),name:`Faturamento ${p.name||("Fase "+(i+1))}`,date,value:share,color:"bright",lane:clamp(Number(p.lane)||0,0,state.lanes-1),auto:true,phaseId:key,dateManual:!!(old&&old.dateManual)});
+    });
+    state.meta.dataPrevFat=dates[0]||"";
+    state.meta.dataPrevFats=dates;
+  }
+  state.billings=keep.concat(next);
+  expandTimelineToContent(state);
+  syncMetaToTimeline();
+  applyPaidForecast();
+}
+function renderFatDates(){
+  const htmlOf=()=>{
+    const mode=(state.auto&&state.auto.billingMode)||"fase";
+    const autos=(state.billings||[]).filter(x=>x.auto).sort((a,b)=>a.date.localeCompare(b.date));
+    if(!autos.length){
+      return `<p class="hint">Escolha Por OS ou Por fase na Automação. No modo fase, crie as fases e informe o término.</p>`;
+    }
+    return autos.map(x=>`<div class="field" style="margin-bottom:8px">
+        <label>${escapeHtml(x.name)} · ${money(x.value)}</label>
+        <input type="date" data-fat-id="${x.id}" value="${x.date||""}">
+      </div>`).join("")
+      +`<p class="hint">${mode==="os"?"Uma data: dia 1 do mês seguinte ao término da OS. Pode ajustar a data.":"Uma data por fase (dia 1 do mês seguinte ao término). Valor da OS dividido igualmente. Aparece na timeline como cobrança."}</p>`;
+  };
+  ["#metaFatDates","#autoFatDates"].forEach(sel=>{
+    const box=$(sel); if(!box) return;
+    box.innerHTML=htmlOf();
+    box.querySelectorAll("[data-fat-id]").forEach(inp=>{
+      inp.addEventListener("change",()=>{
+        const b=state.billings.find(x=>x.id===inp.dataset.fatId);
+        if(!b||!/^\d{4}-\d{2}-\d{2}$/.test(inp.value||"")) return;
+        b.date=inp.value; b.dateManual=true;
+        expandTimelineToContent(state); syncMetaToTimeline(); applyPaidForecast(); persist(); render();
+      });
+    });
+  });
+}
+function laneTitle(i){
+  const n=(state.laneNames||[])[i];
+  return (n&&n.trim())?n.trim():`Raia ${i+1}`;
+}
+function closeLaneMenu(){ $("#laneMenu")?.remove(); }
+function openLaneMenu(event,idx){
+  closeLaneMenu();
+  const div=document.createElement("div");
+  div.id="laneMenu";
+  div.className="lane-menu";
+  div.innerHTML=`<div class="field"><label>Nome da raia</label><input id="laneNameInput" value="${escapeHtml(laneTitle(idx))}"></div>
+    <div class="button-grid">
+      <button type="button" class="btn small" data-lane-act="above">+ Acima</button>
+      <button type="button" class="btn small" data-lane-act="below">+ Abaixo</button>
+    </div>
+    <div class="button-grid" style="margin-top:6px">
+      <button type="button" class="btn small" data-lane-act="save">Salvar nome</button>
+      <button type="button" class="btn small danger" data-lane-act="del">Excluir raia</button>
+    </div>`;
+  document.body.appendChild(div);
+  const r=event.target.getBoundingClientRect();
+  div.style.left=Math.min(r.left, window.innerWidth-260)+"px";
+  div.style.top=(r.bottom+6)+"px";
+  $("#laneNameInput")?.focus();
+  div.addEventListener("click",ev=>{
+    const act=ev.target.closest("[data-lane-act]")?.dataset.laneAct;
+    if(!act) return;
+    if(act==="save"){
+      if(!state.laneNames) state.laneNames=[];
+      state.laneNames[idx]=($("#laneNameInput").value||"").trim()||`Raia ${idx+1}`;
+      closeLaneMenu(); render();
+    }else if(act==="above"){ insertLaneAt(idx); }
+    else if(act==="below"){ insertLaneAt(idx+1); }
+    else if(act==="del"){ removeLaneAt(idx); }
+  });
+}
+function shiftLanes(from,delta){
+  const move=arr=>arr.forEach(x=>{ if(Number(x.lane)>=from) x.lane=Number(x.lane)+delta; });
+  move(state.phases); move(state.homologs); move(state.billings);
+}
+function insertLaneAt(idx){
+  if(state.lanes>=12){alert("Máximo de 12 raias.");return;}
+  idx=clamp(idx,0,state.lanes);
+  if(!state.laneNames) state.laneNames=[];
+  state.laneNames.splice(idx,0,`Raia ${idx+1}`);
+  shiftLanes(idx,1);
+  state.lanes+=1;
+  closeLaneMenu();
+  render();
+}
+function removeLaneAt(lane){
+  if(state.lanes<=1){alert("É necessário manter ao menos 1 raia.");return;}
+  const items=itemsOnLane(lane);
+  if(items.length){
+    const ok=confirm(`A ${laneTitle(lane)} possui ${items.length} item(ns).\n\nExcluir a raia e esses itens?`);
+    if(!ok) return;
+    const ids=new Set(items.map(x=>x.id));
+    state.phases=state.phases.filter(x=>!ids.has(x.id));
+    state.homologs=state.homologs.filter(x=>!ids.has(x.id));
+    state.billings=state.billings.filter(x=>!ids.has(x.id));
+  }
+  (state.laneNames||[]).splice(lane,1);
+  state.phases.forEach(x=>{if(x.lane>lane) x.lane--;});
+  state.homologs.forEach(x=>{if(x.lane>lane) x.lane--;});
+  state.billings.forEach(x=>{if(x.lane>lane) x.lane--;});
+  state.lanes-=1;
+  if(state.selected&&["phase","homolog","billing"].includes(state.selected.type)){
+    const still=getItem(state.selected.type,state.selected.id);
+    if(!still){state.selected=null;popoverAnchor=null;}
+  }
+  closeLaneMenu();
+  render();
+}
+function nextMondayOnOrAfter(iso){
+  const d=parseDate(iso||todayIso());
+  const day=d.getDay();
+  const add=day===1?0:(day===0?1:8-day);
+  return isoDate(addDays(d,add));
+}
+function nextMondayAfter(iso){
+  const d=addDays(parseDate(iso),1);
+  return nextMondayOnOrAfter(isoDate(d));
+}
+function suggestSprint(){
+  const list=state.sprints||[];
+  const number=list.length?Math.max(...list.map(s=>Number(s.number)||0))+1:1;
+  let start;
+  if(list.length){
+    const last=list.slice().sort((a,b)=>a.end.localeCompare(b.end)).at(-1);
+    start=nextMondayAfter(last.end);
+  }else{
+    start=nextMondayOnOrAfter(state.meta.dataInicio||state.start||todayIso());
+  }
+  const end=isoDate(addDays(parseDate(start),11));
+  return {number,name:`${number} Sprint`,start,end};
+}
+function renderAutoPanel(){
+  const a=state.auto||{};
+  const m=state.meta||{};
+  const set=(id,v)=>{const el=$(id); if(el) el.value=v??"";};
+  set("#autoVisao", a.visaoProduto);
+  set("#autoProblema", a.problema);
+  set("#autoPublico", a.publico);
+  set("#autoProposta", a.propostaValor);
+  set("#autoObjetivos", a.objetivos);
+  set("#autoIndicadores", a.indicadores);
+  set("#autoLimites", a.limites);
+  set("#autoHipotese", a.hipotese);
+  set("#autoAlinhamento", a.alinhamento);
+  set("#autoValor", formatMoneyInput(m.valor||0));
+  set("#autoInicio", state.start||"");
+  set("#autoTermino", state.end||"");
+  set("#autoValorFaturado", formatMoneyInput(m.valorFaturado||0));
+  set("#autoValorAFaturar", formatMoneyInput(m.valorAFaturar||0));
+  $$("[data-bill-mode]").forEach(b=>b.classList.toggle("active", b.dataset.billMode===(a.billingMode||"fase")));
+}
+function bindAutoPanel(){
+  const map=[["#autoVisao","visaoProduto"],["#autoProblema","problema"],["#autoPublico","publico"],["#autoProposta","propostaValor"],["#autoObjetivos","objetivos"],["#autoIndicadores","indicadores"],["#autoLimites","limites"],["#autoHipotese","hipotese"],["#autoAlinhamento","alinhamento"]];
+  map.forEach(([sel,key])=>{
+    const el=$(sel); if(!el||el.dataset.bound) return;
+    el.dataset.bound="1";
+    el.addEventListener("input",()=>{state.auto[key]=el.value;persist();});
+  });
+}
+function renderControls(){
+  $("#projectName").value=state.name;
+  $("#hideWeekends").checked=!!state.hideWeekends;
+  $("#hideHolidays").checked=!!state.hideHolidays;
+  $$("[data-view]").forEach(btn=>{
+    btn.classList.toggle("active-view", btn.dataset.view===(state.viewMode||(state.compact?"compact":"medium")));
+  });
+  $("#scaleSeg").innerHTML=[["day","Dia"],["week","Semana"],["month","Mês"]].map(([v,l])=>`<button data-scale="${v}" class="${state.scale===v?"active":""}">${l}</button>`).join("");
+  const hint=$("#timelineRangeHint");
+  if(hint){
+    hint.textContent=`Timeline: ${shortDate(state.start)} → ${shortDate(state.end)}`;
+  }
+  const m=state.meta||{};
+  const set=(id,val)=>{const el=$(id); if(el) el.value=val??"";};
+  set("#metaCodigo", m.codigo||"");
+  set("#metaNome", m.nome||"");
+  set("#metaCentro", m.centroCusto||"");
+  set("#metaOrdem", m.ordemDev||"");
+  set("#metaValor", formatMoneyInput(m.valor||0));
+  set("#metaValorFaturado", formatMoneyInput(m.valorFaturado||0));
+  set("#metaValorAFaturar", formatMoneyInput(m.valorAFaturar||0));
+  set("#metaInicio", state.start||"");
+  set("#metaTermino", state.end||"");
+  set("#metaStatus", m.status||"");
+  set("#metaTsl", m.tsl||"");
+  set("#metaDso", m.dso||"");
+  renderFatDates();
+  renderAutoPanel();
+  $$(".section[data-acc]").forEach(sec=>{
+    const key=sec.dataset.acc;
+    sec.classList.toggle("collapsed", state.accordion && state.accordion[key]===false);
+  });
+  applyLayoutFlags();
+}
+function bindMeta(){
+  const map=[
+    ["#metaCodigo","codigo"],["#metaNome","nome"],["#metaCentro","centroCusto"],["#metaOrdem","ordemDev"],
+    ["#metaStatus","status"],["#metaTsl","tsl"],["#metaDso","dso"]
+  ];
+  map.forEach(([sel,key])=>{
+    const el=$(sel); if(!el||el.dataset.bound) return;
+    el.dataset.bound="1";
+    el.addEventListener("change",()=>{state.meta[key]=el.value;persist();renderStats();});
+    el.addEventListener("input",()=>{state.meta[key]=el.value;persist();});
+  });
+  const valor=$("#metaValor");
+  if(valor&&!valor.dataset.bound){
+    valor.dataset.bound="1";
+    valor.addEventListener("change",()=>{
+      state.meta.valor=parseMoney(valor.value);
+      valor.value=formatMoneyInput(state.meta.valor);
+      syncAutoBillings(); persist(); render();
+    });
+  }
+  const autoValor=$("#autoValor");
+  if(autoValor&&!autoValor.dataset.bound){
+    autoValor.dataset.bound="1";
+    autoValor.addEventListener("change",()=>{
+      state.meta.valor=parseMoney(autoValor.value);
+      autoValor.value=formatMoneyInput(state.meta.valor);
+      syncAutoBillings(); persist(); render();
+    });
+  }
+  const applyDates=(a,b)=>{
+    if(!/^\d{4}-\d{2}-\d{2}$/.test(a||"")||!/^\d{4}-\d{2}-\d{2}$/.test(b||"")){
+      alert("Informe Data de Início e Data de Término válidas.");
+      return false;
+    }
+    if(b<a){alert("A data de término deve ser igual ou posterior à de início."); [a,b]=[b,a];}
+    state.meta.dataInicio=a; state.meta.dataTermino=b;
+    state.start=a; state.end=b;
+    expandTimelineToContent(state);
+    syncMetaToTimeline();
+    syncAutoBillings(); persist(); render();
+    return true;
+  };
+  const onMetaDates=()=>applyDates($("#metaInicio").value,$("#metaTermino").value);
+  const onAutoDates=()=>applyDates($("#autoInicio").value,$("#autoTermino").value);
+  ["#metaInicio","#metaTermino"].forEach(sel=>{
+    const el=$(sel); if(!el||el.dataset.bound) return;
+    el.dataset.bound="1";
+    el.addEventListener("change",onMetaDates);
+  });
+  ["#autoInicio","#autoTermino"].forEach(sel=>{
+    const el=$(sel); if(!el||el.dataset.bound) return;
+    el.dataset.bound="1";
+    el.addEventListener("change",onAutoDates);
+  });
+}
+function listHtml(type,items){
+  if(!items.length)return `<div class="empty">Nenhum item.</div>`;
+  return items.map(x=>{
+    const active=state.selected?.type===type&&state.selected?.id===x.id;
+    const date=type==="phase"||type==="homolog"?`${shortDate(x.start)} → ${shortDate(x.end)}`:shortDate(x.date);
+    const suffix=(type==="billing"||type==="marker"||type==="phase")&&x.value?` · ${money(x.value)}`:"";
+    return `<button class="list-item ${active?"active":""}" data-nav-type="${type}" data-nav-id="${x.id}">
+      <i class="dot" style="background:${colorOf(x.color)}"></i><span class="list-copy"><strong>${escapeHtml(x.name)}</strong><span>${date}${suffix}</span></span>
+    </button>`;
+  }).join("");
+}
+function renderLists(){
+  $("#phaseList").innerHTML=listHtml("phase",state.phases);
+  $("#homologList").innerHTML=listHtml("homolog",state.homologs);
+  $("#billingList").innerHTML=listHtml("billing",state.billings);
+  $("#markerList").innerHTML=listHtml("marker",state.markers);
+}
+function renderHolidayList(){
+  const list=$("#holidayList");
+  if(!list) return;
+  const start=state.start,end=state.end;
+  const items=(state.holidays||[]).filter(h=>h.date>=start&&h.date<=end);
+  if(!items.length){list.innerHTML=`<div class="empty">Nenhum feriado no intervalo.</div>`;return;}
+  list.innerHTML=items.map(h=>`<div class="holiday-row" data-holiday-id="${h.id}">
+    <div>
+      <strong style="font-size:.78rem">${escapeHtml(h.name)}</strong>
+      <div style="font-size:.68rem;color:var(--muted)">${shortDate(h.date)} · ${h.date}</div>
+    </div>
+    <div style="display:flex;gap:4px">
+      <button class="btn small" data-edit-holiday="${h.id}">Editar</button>
+      <button class="btn small danger" data-del-holiday="${h.id}">×</button>
+    </div>
+  </div>`).join("");
+}
+function clearSprintForm(){
+  const sug=suggestSprint();
+  const id=$("#sprintEditId"), num=$("#sprintNumber"), name=$("#sprintName"), start=$("#sprintStart"), end=$("#sprintEnd"), btn=$("#addSprintBtn");
+  if(id) id.value="";
+  if(num) num.value=sug.number;
+  if(name) name.value=sug.name;
+  if(start) start.value=sug.start;
+  if(end) end.value=sug.end;
+  if(btn) btn.textContent="+ Sprint";
+}
+function fillSprintForm(s){
+  $("#sprintEditId").value=s.id;
+  $("#sprintNumber").value=s.number;
+  $("#sprintName").value=s.name;
+  $("#sprintStart").value=s.start;
+  $("#sprintEnd").value=s.end;
+  $("#addSprintBtn").textContent="Salvar sprint";
+}
+function renderSprintList(){
+  const list=$("#sprintList");
+  if(!list) return;
+  const items=state.sprints||[];
+  if(!items.length){list.innerHTML=`<div class="empty">Nenhuma sprint cadastrada.</div>`;return;}
+  list.innerHTML=items.map(s=>`<div class="holiday-row" data-sprint-id="${s.id}">
+    <div>
+      <strong style="font-size:.78rem">Sp ${s.number} · ${escapeHtml(s.name)}</strong>
+      <div style="font-size:.68rem;color:var(--muted)">${shortDate(s.start)} → ${shortDate(s.end)}</div>
+    </div>
+    <div style="display:flex;gap:4px">
+      <button class="btn small" data-edit-sprint="${s.id}">Editar</button>
+      <button class="btn small danger" data-del-sprint="${s.id}">×</button>
+    </div>
+  </div>`).join("");
+}
+function saveSprintFromForm(){
+  let number=Number($("#sprintNumber").value);
+  let name=($("#sprintName").value||"").trim();
+  let start=$("#sprintStart").value;
+  let end=$("#sprintEnd").value;
+  if(!Number.isFinite(number)||number<1){alert("Informe o número da sprint.");return;}
+  if(!/^\d{4}-\d{2}-\d{2}$/.test(start||"")||!/^\d{4}-\d{2}-\d{2}$/.test(end||"")){alert("Informe início e fim válidos.");return;}
+  if(end<start)[start,end]=[end,start];
+  if(!name) name=`${number} Sprint`;
+  else name=`${number} Sprint`;
+  const editId=$("#sprintEditId").value;
+  if(editId){
+    const s=(state.sprints||[]).find(x=>x.id===editId);
+    if(s){s.number=number;s.name=name;s.start=start;s.end=end;}
+  }else{
+    state.sprints.push({id:uid(),number,name,start,end});
+  }
+  state.sprints.sort((a,b)=>a.start.localeCompare(b.start)||a.number-b.number);
+  clearSprintForm();
+  popoverAnchor=null;
+  render();
+}
+function projectDateRange(){
+  return {start:state.start,end:state.end};
+}
+function renderStats(){
+  const today=todayIso();
+  const {faturado,aFaturar,total}=applyPaidForecast();
+  const {start,end}=projectDateRange();
+  const duracao=businessDaysInclusive(start,end);
+  const totalTimeline=businessDaysInclusive(state.start,state.end);
+  const restante=today>state.end?0:businessDaysInclusive(today,state.end);
+  $("#stats").innerHTML=`
+    <span class="stat">Cobranças: ${money(total)}</span>
+    <span class="stat">Faturado: ${money(faturado)}</span>
+    <span class="stat warn">A faturar: ${money(aFaturar)}</span>
+    <span class="stat">Total: ${totalTimeline} dias úteis</span>
+    <span class="stat">Duração: ${duracao} dias úteis</span>
+    <span class="stat">Restante: ${restante} dias úteis</span>`;
+}
+function selectedClass(type,id){return state.selected?.type===type&&state.selected?.id===id?"selected":"";}
+function boardItemHtml(type,x){
+  const pad=itemPad();
+  const height=itemHeight();
+  if(type==="phase"||type==="homolog"){
+    const r=rangeStyle(x.start,x.end);
+    const top=x.lane*state.laneHeight+pad;
+    const bg=colorOf(x.color),fg=textColor(x.color);
+    const details=!state.compact&&type==="phase"&&x.text?`<div class="details">${escapeHtml(x.text)}</div>`:"";
+    const value=!state.compact&&type==="phase"&&Number(x.value)>0?`<div class="money">${money(x.value)}</div>`:"";
+    return `<div class="item ${type} ${selectedClass(type,x.id)}" data-type="${type}" data-id="${x.id}" style="left:${r.left}px;width:${r.width}px;top:${top}px;height:${height}px;background:${bg};color:${fg}">
+      <span class="handle left" data-resize="left"></span><strong>${escapeHtml(x.name)}</strong><span class="dates">${shortDate(x.start)} → ${shortDate(x.end)}</span>${details}${value}<span class="handle right" data-resize="right"></span>
+    </div>`;
+  }
+  if(type==="billing"){
+    const r=pointStyle(x.date);
+    const lane=clamp(Number(x.lane)||0,0,state.lanes-1);
+    const top=lane*state.laneHeight+pad;
+    const bg=colorOf(x.color),fg=textColor(x.color);
+    const value=!state.compact&&Number(x.value)>0?`<div class="money">${money(x.value)}</div>`:"";
+    return `<div class="item billing ${selectedClass(type,x.id)}" data-type="${type}" data-id="${x.id}" style="left:${r.left}px;width:${r.width}px;top:${top}px;height:${height}px;background:${bg};color:${fg}">
+      <strong>${escapeHtml(x.name)}</strong><span class="dates">${shortDate(x.date)}</span>${value}
+    </div>`;
+  }
+  if(type==="marker"){
+    const left=xAtDayStart(x.date)+(xAtDayEnd(x.date)-xAtDayStart(x.date))/2;
+    const val=Number(x.value)>0?` · ${money(x.value)}`:"";
+    return `<div class="marker ${selectedClass(type,x.id)}" data-type="${type}" data-id="${x.id}" style="left:${left}px;background:${colorOf(x.color)}">
+      <span class="marker-pill" style="background:${colorOf(x.color)}">${escapeHtml(x.name)} · ${shortDate(x.date)}${val}</span>
+    </div>`;
+  }
+  return "";
+}
+function todayLineHtml(){
+  const today=todayIso();
+  if(today<state.start||today>state.end) return "";
+  if(state.hideWeekends&&isWeekend(parseDate(today))) return "";
+  const left=xAtDayStart(today)+(xAtDayEnd(today)-xAtDayStart(today))/2;
+  const bg=colorOf(state.todayColor||"red");
+  const sel=state.selected?.type==="today"?"selected":"";
+  return `<div class="today-line ${sel}" data-type="today" data-id="today" style="left:${left}px;background:${bg}">
+    <span class="today-pill" style="background:${bg}">Hoje · ${shortDate(today)}</span>
+  </div>`;
+}
+function syncBoardOverflow(){
+  const sc=$("#boardScroll"), board=$("#board");
+  if(!sc||!board) return;
+  const needY=board.scrollHeight>sc.clientHeight+2;
+  sc.classList.toggle("can-y", needY);
+  sc.style.overflowY=needY?"auto":"hidden";
+}
+function renderBoard(){
+  const board=$("#board"),width=columns.length*colWidth,totalHeight=state.lanes*state.laneHeight;
+  board.classList.toggle("compact", !!state.compact);
+  let monthAlt=0, prevKey=null;
+  const heads=columns.map(c=>{
+    const key=monthKey(c.start);
+    if(prevKey===null) prevKey=key;
+    if(key!==prevKey){monthAlt++; prevKey=key;}
+    const mcls=monthAlt%2?"month-b":"month-a";
+    return `<div class="col-head ${mcls} ${c.weekend?"weekend":""} ${c.holiday?"holiday":""}">${columnLabel(c)}</div>`;
+  }).join("");
+  const weekendBands=state.scale==="day"?columns.map((c,i)=>c.weekend?`<div class="weekend-band" style="left:${i*colWidth}px;width:${colWidth}px"></div>`:"").join(""):"";
+  const holidayBands=state.scale==="day"&&!state.hideHolidays?columns.map((c,i)=>c.holiday?`<div class="holiday-band" style="left:${i*colWidth}px;width:${colWidth}px"></div>`:"").join(""):"";
+  const lanes=Array.from({length:state.lanes},(_,i)=>`<div class="lane" style="height:${state.laneHeight}px"><span class="lane-label" data-lane-menu="${i}">${escapeHtml(laneTitle(i))}</span><span class="lane-resizer" data-lane-resize="${i}"></span></div>`).join("");
+  const items=[
+    ...state.phases.map(x=>boardItemHtml("phase",x)),
+    ...state.homologs.map(x=>boardItemHtml("homolog",x)),
+    ...state.billings.map(x=>boardItemHtml("billing",x)),
+    ...state.markers.map(x=>boardItemHtml("marker",x)),
+    todayLineHtml()
+  ].join("");
+  board.style.width=`${width}px`;
+  board.innerHTML=`<div class="timeline-header" style="grid-template-columns:repeat(${columns.length},${colWidth}px)">${heads}</div>
+    <div class="lanes" style="height:${totalHeight}px">${monthBandsHtml()}${lanes}${weekendBands}${holidayBands}${items}</div>`;
+  const sc=$("#boardScroll");
+  if(sc){
+    sc.style.overflowY="hidden";
+    sc.classList.remove("can-y");
+  }
+  requestAnimationFrame(syncBoardOverflow);
+  if(popoverAnchor&&state.selected) openPopoverAt(popoverAnchor);
+}
+
+function locate(type,id,open=true){
+  state.selected={type,id};
+  renderLists();
+  renderBoard();
+  requestAnimationFrame(()=>{
+    const el=$(`[data-type="${type}"][data-id="${id}"]`,$("#board"));
+    if(!el)return;
+    el.scrollIntoView({behavior:"smooth",block:"center",inline:"center"});
+    if(open){
+      const boardRect=$("#board").getBoundingClientRect(),r=el.getBoundingClientRect();
+      popoverAnchor={left:r.left-boardRect.left,top:r.bottom-boardRect.top+10,width:r.width};
+      openPopoverAt(popoverAnchor);
+    }
+  });
+}
+function selectItem(type,id,element){
+  state.selected={type,id};
+  const boardRect=$("#board").getBoundingClientRect(),r=element.getBoundingClientRect();
+  popoverAnchor={left:r.left-boardRect.left,top:r.bottom-boardRect.top+10,width:r.width};
+  if(drag){render({skipBoard:true});return;}
+  render();
+}
+function closePopover(){
+  popoverAnchor=null;
+  $(".popover",$("#board"))?.remove();
+}
+function colorPicker(value){
+  return `<div class="color-picker">${Object.entries(COLORS).map(([key,color])=>`<button type="button" title="${key}" class="color-choice ${key===value?"active":""}" data-color="${key}" style="background:${color}"></button>`).join("")}</div>`;
+}
+function openPopoverAt(anchor){
+  const sel=state.selected;
+  if(!sel){closePopover();return;}
+  $(".popover",$("#board"))?.remove();
+  const board=$("#board"),maxLeft=Math.max(8,board.offsetWidth-348);
+  const left=clamp(anchor.left,8,maxLeft),top=anchor.top;
+  const div=document.createElement("form");
+  div.className="popover";div.id="floatEditor";div.style.left=`${left}px`;div.style.top=`${top}px`;
+
+  if(sel.type==="today"){
+    div.innerHTML=`<div class="pop-head"><strong>Linha de hoje</strong><button type="button" class="close" data-close aria-label="Fechar">×</button></div>
+      <p class="hint">Data fixa (${shortDate(todayIso())}). Apenas a cor pode ser alterada.</p>
+      <div class="field"><label>Cor</label>${colorPicker(state.todayColor||"red")}</div>
+      <input type="hidden" name="color" value="${state.todayColor||"red"}">
+      <div class="pop-actions"><span></span><span><button type="button" class="btn" data-close>Fechar</button> <button class="btn primary" type="submit">Salvar</button></span></div>`;
+    board.appendChild(div);
+    return;
+  }
+
+  const item=getItem(sel.type,sel.id);
+  if(!item){closePopover();return;}
+  const isRange=sel.type==="phase"||sel.type==="homolog";
+  const hasValue=sel.type==="phase"||sel.type==="billing"||sel.type==="marker";
+  const convertBtn=sel.type==="billing"
+    ?`<button type="button" class="btn" data-convert="marker">Virar marcação</button>`
+    :sel.type==="marker"
+    ?`<button type="button" class="btn" data-convert="billing">Virar cobrança</button>`
+    :"";
+  div.innerHTML=`<div class="pop-head"><strong>Editar ${sel.type==="phase"?"fase":sel.type==="homolog"?"homologação":sel.type==="billing"?"cobrança":"marcação"}</strong><button type="button" class="close" data-close aria-label="Fechar">×</button></div>
+    <div class="field"><label>Nome</label><input name="name" value="${escapeHtml(item.name)}" required></div>
+    ${isRange?`<div class="two"><div class="field"><label>Início</label><input type="date" name="start" value="${item.start}" required></div><div class="field"><label>Fim</label><input type="date" name="end" value="${item.end}" required></div></div>
+      <input type="hidden" name="lane" value="${Number(item.lane)||0}">`:
+      `<div class="field"><label>Data</label><input type="date" name="date" value="${item.date}" required></div>
+       <input type="hidden" name="lane" value="${Number(item.lane)||0}">`}
+    ${sel.type==="phase"?`<div class="field"><label>Descrição</label><textarea name="text">${escapeHtml(item.text||"")}</textarea></div>`:""}
+    ${hasValue?`<div class="field"><label>Valor (R$)</label><input type="text" name="value" inputmode="decimal" placeholder="138.167,55" value="${escapeHtml(formatMoneyInput(item.value||0))}"></div>`:""}
+    <div class="field"><label>Cor</label>${colorPicker(item.color)}</div>
+    <input type="hidden" name="color" value="${item.color}">
+    <div class="pop-actions"><button type="button" class="btn danger" data-delete>Excluir</button><span><button type="button" class="btn" data-duplicate="${item.id}" data-dup-type="${sel.type}">Duplicar</button> ${convertBtn} <button type="button" class="btn" data-close>Fechar</button> <button class="btn primary" type="submit">Salvar</button></span></div>`;
+  board.appendChild(div);
+  const popBottom=top+div.offsetHeight;
+  if(popBottom>board.offsetHeight) board.style.minHeight=`${popBottom+20}px`;
+}
+function saveEditor(form){
+  const sel=state.selected;
+  if(!sel)return;
+  const fd=new FormData(form);
+  if(sel.type==="today"){
+    state.todayColor=String(fd.get("color")||"red");
+    popoverAnchor=null;render();return;
+  }
+  const item=getItem(sel.type,sel.id);
+  if(!item)return;
+  item.name=String(fd.get("name")||"").trim()||item.name;
+  item.color=String(fd.get("color")||item.color);
+  if(sel.type==="phase"||sel.type==="homolog"){
+    item.start=String(fd.get("start"));item.end=String(fd.get("end"));
+    if(item.end<item.start)[item.start,item.end]=[item.end,item.start];
+    item.lane=clamp(Number(fd.get("lane")),0,state.lanes-1);
+  }else item.date=String(fd.get("date"));
+  if(sel.type==="phase")item.text=String(fd.get("text")||"");
+  if(sel.type==="phase"||sel.type==="billing"||sel.type==="marker")item.value=Math.max(0,parseMoney(fd.get("value")));
+  if(sel.type==="billing") item.lane=clamp(Number(fd.get("lane")),0,state.lanes-1);
+  if(sel.type==="phase") syncAutoBillings();
+  expandTimelineToContent(state);
+  syncMetaToTimeline();
+  popoverAnchor=null;render();
+}
+function convertSelected(toType){
+  const sel=state.selected;
+  if(!sel||(sel.type!=="billing"&&sel.type!=="marker")) return;
+  if(toType===sel.type) return;
+  const item=getItem(sel.type,sel.id);
+  if(!item) return;
+  const moved={
+    id:item.id,
+    name:item.name,
+    date:item.date,
+    value:Number(item.value)||0,
+    color:item.color,
+    lane:Number(item.lane)||0
+  };
+  state[TYPE_COLLECTION[sel.type]]=state[TYPE_COLLECTION[sel.type]].filter(x=>x.id!==item.id);
+  if(toType==="billing"){
+    state.billings.push(moved);
+  }else{
+    const {lane,...rest}=moved;
+    state.markers.push(rest);
+  }
+  state.selected={type:toType,id:moved.id};
+  popoverAnchor=null;
+  locate(toType,moved.id);
+}
+function duplicateItem(type,id){
+  if(!TYPE_COLLECTION[type]) return;
+  const src=getItem(type,id); if(!src) return;
+  const copy=clone(src);
+  copy.id=uid();
+  copy.name=(src.name||"Item").replace(/\s*\(cópia\)\s*$/i,"")+" (cópia)";
+  if(type==="phase"||type==="homolog"){
+    const days=Math.max(1, Math.round((parseDate(src.end)-parseDate(src.start))/86400000)+1);
+    copy.start=isoShift(src.start,days);
+    copy.end=isoShift(src.end,days);
+  }else{
+    copy.date=isoShift(src.date,7);
+  }
+  if(type==="billing"){
+    copy.auto=false;
+    copy.phaseId="";
+    copy.dateManual=true;
+  }
+  state[TYPE_COLLECTION[type]].push(copy);
+  if(type==="phase") syncAutoBillings();
+  expandTimelineToContent(state);
+  syncMetaToTimeline();
+  locate(type,copy.id);
+}
+function deleteSelected(){
+  const sel=state.selected;if(!sel||sel.type==="today")return;
+  const wasPhase=sel.type==="phase";
+  state[TYPE_COLLECTION[sel.type]]=state[TYPE_COLLECTION[sel.type]].filter(x=>x.id!==sel.id);
+  if(wasPhase) syncAutoBillings();
+  state.selected=null;popoverAnchor=null;render();
+}
+function addItem(type){
+  const start=state.start,end=state.end;
+  if(type==="phase"){
+    const e=isoDate(addDays(parseDate(start),Math.min(13,Math.max(0,(parseDate(end)-parseDate(start))/86400000))));
+    const x={id:uid(),name:"Nova fase",start,end:e,lane:0,color:"blue",text:"",value:0};state.phases.push(x);syncAutoBillings();locate(type,x.id);
+  }else if(type==="homolog"){
+    const x={id:uid(),name:"HML",start,end:start,lane:Math.min(state.lanes-1,3),color:"navy"};state.homologs.push(x);locate(type,x.id);
+  }else if(type==="billing"){
+    const x={id:uid(),name:"Nova cobrança",date:start,value:0,color:"bright",lane:0};state.billings.push(x);locate(type,x.id);
+  }else{
+    const x={id:uid(),name:"Nova marcação",date:start,color:"red",value:0};state.markers.push(x);locate(type,x.id);
+  }
+}
+function itemsOnLane(lane){
+  return [
+    ...state.phases.filter(x=>x.lane===lane),
+    ...state.homologs.filter(x=>x.lane===lane),
+    ...state.billings.filter(x=>x.lane===lane)
+  ];
+}
+function addLane(){
+  if(state.lanes>=12){alert("Máximo de 12 raias.");return;}
+  state.lanes+=1;render();
+}
+function removeLane(){
+  if(state.lanes<=1){alert("É necessário manter ao menos 1 raia.");return;}
+  const lane=state.lanes-1;
+  const items=itemsOnLane(lane);
+  if(items.length){
+    const ok=confirm(`A raia ${lane+1} possui ${items.length} item(ns) com dados.\n\nConfirmar exclusão? Os itens dessa raia serão removidos.`);
+    if(!ok) return;
+    const ids=new Set(items.map(x=>x.id));
+    state.phases=state.phases.filter(x=>!ids.has(x.id));
+    state.homologs=state.homologs.filter(x=>!ids.has(x.id));
+    state.billings=state.billings.filter(x=>!ids.has(x.id));
+  }
+  state.lanes-=1;
+  if(state.selected&&["phase","homolog","billing"].includes(state.selected.type)){
+    const still=getItem(state.selected.type,state.selected.id);
+    if(!still){state.selected=null;popoverAnchor=null;}
+  }
+  render();
+}
+
+function beginItemDrag(event,itemEl,type,id){
+  if(event.button!==0)return;
+  if(type==="today"){
+    state.selected={type:"today",id:"today"};
+    const boardRect=$("#board").getBoundingClientRect(),r=itemEl.getBoundingClientRect();
+    popoverAnchor={left:r.left-boardRect.left,top:r.bottom-boardRect.top+10,width:r.width};
+    render();
+    return;
+  }
+  const item=getItem(type,id);if(!item)return;
+  const resize=event.target.closest("[data-resize]")?.dataset.resize;
+  const boardRect=$("#board").getBoundingClientRect();
+  const startLeft=itemEl.getBoundingClientRect().left-boardRect.left;
+  const startWidth=itemEl.getBoundingClientRect().width;
+  drag={kind:"item",type,id,itemEl,startX:event.clientX,startY:event.clientY,resize:resize||"move",
+    startLeft,startWidth,
+    startDate:item.start||item.date,endDate:item.end||item.date,
+    lane:item.lane||0,moved:false};
+  itemEl.setPointerCapture?.(event.pointerId);
+  document.body.classList.add("dragging");
+  state.selected={type,id};
+  render({skipBoard:true});
+  event.preventDefault();
+}
+function beginLaneResize(event){
+  drag={kind:"lane",startY:event.clientY,startHeight:state.laneHeight,moved:false};
+  document.body.classList.add("dragging");event.preventDefault();
+}
+function onPointerMove(event){
+  if(!drag)return;
+  if(drag.kind==="lane"){
+    const next=clamp(Math.round((drag.startHeight+event.clientY-drag.startY)/8)*8,72,480);
+    if(next!==state.laneHeight){
+      state.laneHeight=next;
+      drag.moved=true;
+      document.documentElement.style.setProperty("--lane-h", next+"px");
+      const laneH=next;
+      $$(".lane",$("#board")).forEach(l=>l.style.height=laneH+"px");
+      const lanes=$(".lanes",$("#board"));
+      if(lanes) lanes.style.height=(state.lanes*laneH)+"px";
+    }
+    return;
+  }
+  const dx=event.clientX-drag.startX,dy=event.clientY-drag.startY;
+  if(Math.abs(dx)>3||Math.abs(dy)>3)drag.moved=true;
+  const item=getItem(drag.type,drag.id);
+  if(!item)return;
+
+  if(drag.type==="phase"||drag.type==="homolog"){
+    let left=drag.startLeft, width=drag.startWidth;
+    if(drag.resize==="left"){ left=drag.startLeft+dx; width=drag.startWidth-dx; if(width<10){left=drag.startLeft+drag.startWidth-10;width=10;} }
+    else if(drag.resize==="right"){ width=Math.max(10,drag.startWidth+dx); }
+    else {
+      left=drag.startLeft+dx;
+      item.lane=clamp(drag.lane+Math.round(dy/state.laneHeight),0,state.lanes-1);
+    }
+    const startIso=dateAtPixel(left);
+    const endIso=dateAtPixel(left+width-1);
+    item.start=startIso; item.end=endIso;
+    if(item.end<item.start)[item.start,item.end]=[item.end,item.start];
+    const r=rangeStyle(item.start,item.end);
+    drag.itemEl.style.left=`${r.left}px`;drag.itemEl.style.width=`${r.width}px`;
+    const pad=itemPad();
+    drag.itemEl.style.top=`${item.lane*state.laneHeight+pad}px`;
+    drag.itemEl.style.height=`${itemHeight()}px`;
+    const dates=drag.itemEl.querySelector(".dates");
+    if(dates) dates.textContent=`${shortDate(item.start)} → ${shortDate(item.end)}`;
+  }else if(drag.type==="billing"){
+    const left=drag.startLeft+dx;
+    item.date=dateAtPixel(left+drag.startWidth/2);
+    item.lane=clamp(drag.lane+Math.round(dy/state.laneHeight),0,state.lanes-1);
+    const r=pointStyle(item.date);
+    const pad=itemPad(), height=itemHeight();
+    drag.itemEl.style.left=`${r.left}px`;
+    drag.itemEl.style.width=`${r.width}px`;
+    drag.itemEl.style.top=`${item.lane*state.laneHeight+pad}px`;
+    drag.itemEl.style.height=`${height}px`;
+    const dates=drag.itemEl.querySelector(".dates");
+    if(dates) dates.textContent=shortDate(item.date);
+  }else if(drag.type==="marker"){
+    const left=drag.startLeft+dx;
+    item.date=dateAtPixel(left);
+    const x=xAtDayStart(item.date)+(xAtDayEnd(item.date)-xAtDayStart(item.date))/2;
+    drag.itemEl.style.left=`${x}px`;
+    const pill=drag.itemEl.querySelector(".marker-pill");
+    if(pill){
+      const val=Number(item.value)>0?` · ${money(item.value)}`:"";
+      pill.textContent=`${item.name} · ${shortDate(item.date)}${val}`;
+    }
+  }
+}
+function onPointerUp(){
+  if(!drag)return;
+  const finished=drag;drag=null;document.body.classList.remove("dragging");
+  if(finished.kind==="lane"){render();return;}
+  if(finished.moved){
+    if(finished.type==="phase") syncAutoBillings();
+    popoverAnchor=null;render();
+  }else{
+    selectItem(finished.type,finished.id,finished.itemEl);
+  }
+}
+
+function exportJson(){
+  const blob=new Blob([JSON.stringify(state,null,2)],{type:"application/json;charset=utf-8"});
+  const a=document.createElement("a");a.href=URL.createObjectURL(blob);
+  a.download=`roadmap-${new Date().toISOString().slice(0,10)}.json`;a.click();
+  setTimeout(()=>URL.revokeObjectURL(a.href),500);
+}
+function importJson(file){
+  if(!file){alert("Nenhum arquivo selecionado.");return;}
+  const reader=new FileReader();
+  reader.onerror=()=>alert("Não foi possível ler o arquivo.");
+  reader.onload=()=>{
+    try{
+      const raw=String(reader.result||"").replace(/^\uFEFF/,"");
+      const parsed=JSON.parse(raw);
+      if(!parsed||typeof parsed!=="object") throw new Error("JSON raiz inválido");
+      state=normalize(parsed);
+      popoverAnchor=null;
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+      render();
+      alert("JSON importado com sucesso.");
+    }catch(error){
+      console.error(error);
+      alert("Arquivo JSON inválido: "+(error&&error.message?error.message:error));
+    }
+  };
+  reader.readAsText(file,"UTF-8");
+}
+function reset(){
+  if(!confirm("Restaurar os dados iniciais e descartar alterações locais?"))return;
+  state=normalize(SEED);popoverAnchor=null;localStorage.removeItem(STORAGE_KEY);render();
+}
+
+document.addEventListener("click",event=>{
+  if(!event.target.closest("#laneMenu") && !event.target.closest("[data-lane-menu]")) closeLaneMenu();
+  const autoBtn=event.target.closest("#autoBtn");
+  if(autoBtn){
+    $("#autoPanel").classList.toggle("hidden");
+    $("#autoBtn").classList.toggle("active-view", !$("#autoPanel").classList.contains("hidden"));
+    return;
+  }
+  const billMode=event.target.closest("[data-bill-mode]");
+  if(billMode){
+    state.auto.billingMode=billMode.dataset.billMode;
+    syncAutoBillings(); persist(); render();
+    return;
+  }
+  const acc=event.target.closest("[data-acc-toggle]");
+  if(acc){
+    const sec=acc.closest(".section[data-acc]");
+    if(sec){
+      const key=sec.dataset.acc;
+      sec.classList.toggle("collapsed");
+      state.accordion[key]=!sec.classList.contains("collapsed");
+      persist();
+    }
+    return;
+  }
+  const scale=event.target.closest("[data-scale]");
+  if(scale){state.scale=scale.dataset.scale;popoverAnchor=null;render();return;}
+  const viewBtn=event.target.closest("[data-view]");
+  if(viewBtn){
+    const mode=viewBtn.dataset.view;
+    const prev=state.viewMode||(state.compact?"compact":"medium");
+    if(mode==="compact"&&prev!=="compact"){
+      state.laneHeightPrev=state.laneHeight>140?state.laneHeight:(state.laneHeightPrev||288);
+      state.laneHeight=96;
+    }else if(mode!=="compact"&&prev==="compact"){
+      state.laneHeight=clamp(Number(state.laneHeightPrev)||288,120,480);
+    }
+    state.viewMode=mode;
+    state.compact=mode==="compact";
+    popoverAnchor=null;render();return;
+  }
+  const add=event.target.closest("[data-add]");
+  if(add){addItem(add.dataset.add);return;}
+  const nav=event.target.closest("[data-nav-type]");
+  if(nav){locate(nav.dataset.navType,nav.dataset.navId);return;}
+  if(event.target.closest("[data-close]")){closePopover();return;}
+  if(event.target.closest("[data-delete]")){deleteSelected();return;}
+  const dup=event.target.closest("[data-duplicate]");
+  if(dup){duplicateItem(dup.dataset.dupType,dup.dataset.duplicate);return;}
+  const convert=event.target.closest("[data-convert]");
+  if(convert){convertSelected(convert.dataset.convert);return;}
+  const color=event.target.closest("[data-color]");
+  if(color){
+    const form=color.closest("form");form.elements.color.value=color.dataset.color;
+    $$(".color-choice",form).forEach(x=>x.classList.toggle("active",x===color));return;
+  }
+  const editH=event.target.closest("[data-edit-holiday]");
+  if(editH){
+    const h=(state.holidays||[]).find(x=>x.id===editH.dataset.editHoliday);
+    if(!h) return;
+    const name=prompt("Nome do feriado:", h.name);
+    if(name===null) return;
+    const date=prompt("Data (AAAA-MM-DD):", h.date);
+    if(date===null) return;
+    if(!/^\d{4}-\d{2}-\d{2}$/.test(date)){alert("Data inválida.");return;}
+    h.name=name.trim()||h.name;
+    h.date=date;
+    render();
+    return;
+  }
+  const delH=event.target.closest("[data-del-holiday]");
+  if(delH){
+    if(!confirm("Excluir este feriado?")) return;
+    state.holidays=state.holidays.filter(x=>x.id!==delH.dataset.delHoliday);
+    render();
+    return;
+  }
+  const editS=event.target.closest("[data-edit-sprint]");
+  if(editS){
+    const s=(state.sprints||[]).find(x=>x.id===editS.dataset.editSprint);
+    if(s) fillSprintForm(s);
+    return;
+  }
+  const delS=event.target.closest("[data-del-sprint]");
+  if(delS){
+    if(!confirm("Excluir esta sprint?")) return;
+    state.sprints=state.sprints.filter(x=>x.id!==delS.dataset.delSprint);
+    if($("#sprintEditId").value===delS.dataset.delSprint) clearSprintForm();
+    render();
+  }
+});
+document.addEventListener("submit",event=>{
+  if(event.target.id==="floatEditor"){event.preventDefault();saveEditor(event.target);}
+});
+$("#board").addEventListener("pointerdown",event=>{
+  const laneMenu=event.target.closest("[data-lane-menu]");
+  if(laneMenu){openLaneMenu(event, Number(laneMenu.dataset.laneMenu));return;}
+  const laneResize=event.target.closest("[data-lane-resize]");
+  if(laneResize){beginLaneResize(event);return;}
+  const el=event.target.closest("[data-type]");
+  if(!el)return;
+  if(event.target.closest("[data-duplicate]")) return;
+  beginItemDrag(event,el,el.dataset.type,el.dataset.id);
+});
+document.addEventListener("pointermove",onPointerMove,{passive:false});
+document.addEventListener("pointerup",onPointerUp);
+document.addEventListener("pointercancel",onPointerUp);
+$("#projectName").addEventListener("change",e=>{state.name=e.target.value.trim()||SEED.name;render();});
+$("#hideWeekends").addEventListener("change",e=>{state.hideWeekends=e.target.checked;popoverAnchor=null;render();});
+$("#hideHolidays").addEventListener("change",e=>{state.hideHolidays=e.target.checked;popoverAnchor=null;render();});
+$("#addHolidayBtn").addEventListener("click",()=>{
+  const date=prompt("Data do feriado (AAAA-MM-DD):", todayIso());
+  if(!date) return;
+  if(!/^\d{4}-\d{2}-\d{2}$/.test(date)){alert("Data inválida.");return;}
+  const name=prompt("Nome:", "Feriado")||"Feriado";
+  state.holidays.push({id:uid(),date,name,hidden:false});
+  state.holidays.sort((a,b)=>a.date.localeCompare(b.date));
+  render();
+});
+$("#addSprintBtn").addEventListener("click",saveSprintFromForm);
+$("#clearSprintFormBtn").addEventListener("click",clearSprintForm);
+$("#sprintNumber")?.addEventListener("input",()=>{
+  const n=Number($("#sprintNumber").value);
+  if($("#sprintName") && Number.isFinite(n) && n>=1) $("#sprintName").value=`${n} Sprint`;
+});
+$("#resetHolidaysBtn").addEventListener("click",()=>{
+  if(!confirm("Restaurar feriados nacionais padrão no intervalo do projeto?")) return;
+  const y0=parseDate(state.start).getFullYear(), y1=parseDate(state.end).getFullYear();
+  const years=[]; for(let y=y0;y<=y1;y++) years.push(y);
+  state.holidays=defaultHolidaysForYears(years);
+  render();
+});
+$("#exportBtn").addEventListener("click",exportJson);
+$("#importBtn").addEventListener("click",e=>{e.preventDefault();e.stopPropagation();const input=$("#importFile");if(input)input.click();});
+$("#importFile").addEventListener("change",e=>{
+  const file=e.target.files&&e.target.files[0];
+  if(file) importJson(file);
+  e.target.value="";
+});
+$("#resetBtn").addEventListener("click",reset);
+$("#todayBtn").addEventListener("click",()=>{
+  const today=todayIso();
+  const left=xAtDayStart(today);
+  $("#boardScroll").scrollTo({left:Math.max(0,left-$("#boardScroll").clientWidth/2),behavior:"smooth"});
+});
+function toggleRoadmapSidebar(){
+  state.sidebarHidden=!state.sidebarHidden;
+  persist();
+  applyLayoutFlags();
+  requestAnimationFrame(()=>render());
+}
+$("#toggleSideBtn").addEventListener("click",toggleRoadmapSidebar);
+$("#showSideBtn").addEventListener("click",toggleRoadmapSidebar);
+
+const resizeObserver=new ResizeObserver(entries=>{
+  const width=Math.round(entries[0]?.contentRect.width||0);
+  if(rendering||Math.abs(width-lastBoardWidth)<2)return;
+  lastBoardWidth=width;clearTimeout(resizeTimer);
+  resizeTimer=setTimeout(()=>{if(!drag)render();},80);
+});
+resizeObserver.observe($("#boardScroll"));
+window.addEventListener("resize",()=>{
+  clearTimeout(resizeTimer);
+  resizeTimer=setTimeout(()=>{if(!drag)render();},100);
+});
+bindMeta();
+bindAutoPanel();
+syncAutoBillings();
+clearSprintForm();
+requestAnimationFrame(()=>render());
+
+/* ===== Backlog (kickoff) — storage e UI isolados do roadmap ===== */
+const BL_KEY = "roadmap-backlog-v3";
+const BL_TYPES = [
+  {id:"epic",label:"Epic"},
+  {id:"feature",label:"Feature"},
+  {id:"pbi",label:"PBI"},
+  {id:"task",label:"Task"},
+  {id:"bug",label:"Bug"},
+  {id:"spike",label:"Spike"}
+];
+const BL_TYPE_LABEL = Object.fromEntries(BL_TYPES.map(t=>[t.id,t.label]));
+const BL_RANK = {epic:0,feature:1,pbi:2,story:2,integration:3,task:4,bug:4,spike:4,debt:4,note:5};
+const BL_PARENT_OF = {
+  epic:[],
+  feature:["epic"],
+  pbi:["feature"],
+  story:["feature"],
+  task:["pbi","story"],
+  bug:["pbi","story"],
+  spike:["pbi","story","feature"]
+};
+const BL_STATUS_LABEL = {
+  em_refinamento:"Em refinamento", discovery:"Discovery", precisa_dividir:"Precisa dividir",
+  ready:"Ready", devolvido:"Devolvido", bloqueado:"Bloqueado",
+  capturado:"Em refinamento", esclarecer:"Em refinamento", validado:"Ready"
+};
+const BL_DOR = [
+  ["dorFeature","Vinculado à Feature correta"],
+  ["dorDesc","Descrição / objetivo claros"],
+  ["dorValue","Valor identificado"],
+  ["dorAccept","Critérios de aceitação testáveis"],
+  ["dorProto","Protótipo ou fluxo quando necessário"],
+  ["dorRules","Regras, dados e permissões definidos"],
+  ["dorDeps","Dependências e integrações mapeadas"],
+  ["dorDoubts","Dúvidas críticas resolvidas"],
+  ["dorSmall","Cabe em uma sprint"],
+  ["dorEstimate","Estimado pela equipe"],
+  ["dorPrio","Priorizado"],
+  ["dorUnblocked","Sem bloqueio para começar"]
+];
+const BL_TEXT_KEYS = ["objective","value","user","flow","scopeIn","scopeOut","processNow","processNext","requirements","rules","data","permissions","integrations","prototype","accept","exceptions","dependencies","nfr","risks","doubts","links","estimate","owner","ownerDue","size","po","bizValue","area","iteration","tags","azure"];
+
+const BL_HELP = {
+  type:{o:"O nível do item na hierarquia Azure/Jira.",c:"Epic = OS/projeto. Feature = fase. PBI = funcionalidade. Task = trabalho técnico depois que o PBI está claro. Bug/Spike só em PBI.",u:"Filtra o pai permitido e o DoR (só PBI precisa de DoR completo para Ready).",e:"PBI “Cadastrar produto” abaixo da Feature “Fase 2 · Catálogo”."},
+  title:{o:"Nome curto do item.",c:"Verbo + objeto. Sem código interno no título.",u:"Aparece na árvore e na sprint.",e:"Cadastrar produto em página única."},
+  parent:{o:"Item pai na hierarquia.",c:"Feature abaixo de Epic. PBI abaixo de Feature (obrigatório). Task/Bug abaixo de PBI.",u:"Garante rastreio Epic → Feature → PBI → Task.",e:"Pai do PBI “Importar CSV” = Feature “Fase 2 · Catálogo & Produtos”."},
+  prio:{o:"Ordem de atendimento no refinamento.",c:"Crítica = bloqueia go-live. Alta = nesta sprint. Média/Baixa = depois.",u:"Ordenar a reunião e o board.",e:"Alta: homologação MTI do catálogo."},
+  status:{o:"Situação do refinamento (não é status de sprint).",c:"Em refinamento = preenchendo. Discovery = ainda descobrir. Precisa dividir = grande. Ready = DoR ok. Devolvido/Bloqueado = parou.",u:"PBI Ready só entra na sprint.",e:"DoR incompleto → permanece Em refinamento."},
+  estimate:{o:"Esforço combinado pelo time.",c:"Story points, T-shirt ou horas. Só depois do time estimar.",u:"Capacidade da sprint.",e:"8 pts ou M ou 12h."},
+  size:{o:"Cabe em uma sprint?",c:"Cabe / Precisa dividir / Grande demais. Se dividir, o status vira Precisa dividir.",u:"Evitar PBI que não fecha na sprint.",e:"Cadastro de produto + CSV + análise no mesmo PBI → dividir."},
+  owner:{o:"Quem decide ou ajusta a pendência.",c:"Nome da pessoa (PO, analista, DSO), não o time inteiro.",u:"Cobrar dúvida ou ajuste.",e:"Lucas Santos (DSO) / Fernanda Iwasaka (TSL)."},
+  ownerDue:{o:"Data limite da pendência.",c:"Prazo da dúvida ou do ajuste, não a data da sprint.",u:"Ver o que está atrasado.",e:"2026-08-19 (fim da Fase 2)."},
+  objective:{o:"Problema e por que existe o item.",c:"1–3 frases: contexto + dor + o que muda.",u:"Alinha PO e time antes de detalhar regras.",e:"O parceiro não consegue cadastrar Licença/Serviço no catálogo da parceria; a MTI analisa em planilha."},
+  value:{o:"Benefício se entregar.",c:"Quem ganha e o que deixa de fazer na mão.",u:"Priorizar o que gera resultado.",e:"Parceiro publica produtos; MTI homologa no Sydle; cliente só vê após apostila."},
+  user:{o:"Quem usa ou é afetado.",c:"Papel + canal (portal/backoffice).",u:"Permissões e critérios de aceite.",e:"Parceiro (portal), analista MTI (backoffice), focal de vendas (catálogo — não no produto)."},
+  flow:{o:"Caminho de ponta a ponta.",c:"Início → etapas → fim. Inclua quem age em cada passo.",u:"Protótipo, exceções e aceite.",e:"MTI cria catálogo → parceiro cadastra produto → envia análise → MTI aprova → publica → apostila no contrato."},
+  scopeIn:{o:"O que este item entrega.",c:"Lista o que entra agora. Sem “etc.”.",u:"Fecha discussão de escopo.",e:"Cadastro em página única; Tipo Licença|Serviço; 1 produto → 1 catálogo."},
+  scopeOut:{o:"O que NÃO entra neste item.",c:"Deixe explícito o que é outra fase ou outro PBI.",u:"Evita retrabalho e “já que estamos aqui”.",e:"Fase 2: fora OS, orçamento, saldo e consumo Tipo 3. Focais não ficam no Produto."},
+  processNow:{o:"Como é feito hoje.",c:"Ferramenta e gargalo atuais.",u:"Mostra o ganho e o que migrar.",e:"Cadastro em planilha/CSV; análise por e-mail; preço sem rastreio de versão."},
+  processNext:{o:"Como ficará no Sydle.",c:"Mesmos passos do fluxo, no sistema.",u:"Desenho do to-be.",e:"Parceiro preenche o produto no portal; condicionais Licença/Serviço; MTI analisa na fila."},
+  prototype:{o:"Tela ou fluxo de referência.",c:"Link Figma/Miro + o que a tela mostra e as mensagens.",u:"DoR: protótipo quando a UI importa.",e:"Atlas Protótipo → Fase 2 · Catálogo & Produtos · classe Produto."},
+  requirements:{o:"O que o sistema deve fazer.",c:"Comportamentos observáveis. Prefira RF-xx se já existirem.",u:"Base para desenvolvimento e teste.",e:"RF-PROD-01 cadastro em página única. RF-PROD-05 complexidade só se Tipo = Serviço."},
+  rules:{o:"Validações e decisões de negócio.",c:"Se X então Y. Independências e proibições.",u:"Impede implementação “no feeling”.",e:"RN-P-01: 1 produto → 1 catálogo. Universal e Individualizado são independentes. Cobrança: Mensal · Anual · Conforme homologação."},
+  data:{o:"Campos e persistência.",c:"Nome, tipo, obrigatório, origem, quando aparece.",u:"Modelo de dados e formulário.",e:"Nome e SKU obrigatórios. Complexidade/coeficiente/peso/qtde só Serviço. Focais só no Catálogo da parceria."},
+  permissions:{o:"Quem pode o quê.",c:"Consultar / criar / editar / enviar / aprovar.",u:"Perfis do portal e backoffice.",e:"Parceiro cria/edita rascunho. MTI aprova, pede ajuste, reprova, paralisa. Cliente não edita produto."},
+  integrations:{o:"Sistemas externos.",c:"Sistema, dado, direção, quando dispara, erro.",u:"Contratos de API e exceções.",e:"Códigos SIAG/Protheus se preenchimento manual = Sim. Fase 3: Protheus · ServiceNow · HCMX."},
+  exceptions:{o:"Quando dá errado.",c:"Erro + mensagem + o que o usuário faz.",u:"Testes negativos.",e:"Enviar sem catálogo: bloquear e pedir catálogo. API indisponível: mensagem e manter rascunho."},
+  dependencies:{o:"O que precisa existir antes.",c:"Outro PBI, pessoa, sistema ou decisão.",u:"Ordem do backlog e bloqueios.",e:"Catálogo da parceria criado pela MTI antes do parceiro cadastrar produto."},
+  nfr:{o:"Qualidade além da função.",c:"Auditoria, performance, segurança, disponibilidade.",u:"Não deixar só “funcionar feliz”.",e:"Registrar usuário, data e ação no envio à análise. Lista de produtos com paginação."},
+  risks:{o:"O que pode atrasar ou quebrar.",c:"Risco + impacto + mitigação.",u:"Decisão no refinamento.",e:"Modelo de venda ainda provisório — confirmar com MTI antes de Ready."},
+  accept:{o:"Como o time prova que acabou.",c:"Um critério por linha, testável, sem “bem feito”.",u:"DoR e teste de aceite.",e:"Parceiro salva produto Licença sem ver complexidade.\\nCard da lista mostra só nome + tipo + status.\\nPublicar não mostra o item ao cliente até apostila."},
+  doubts:{o:"Perguntas que travam o Ready.",c:"Dúvida + quem decide. Vazio se já decidido.",u:"Se crítica aberta, DoR “dúvidas resolvidas” fica desmarcado.",e:"Modelo de venda (Por Licença / Serviço / Pacote) está homologado?"},
+  links:{o:"Fontes oficiais.",c:"URL ou caminho do artefato.",u:"PO e dev abrem a mesma referência.",e:"exports/requisitos-finais-produto-catalogo-parceria.md"},
+  dor:{o:"Definition of Ready do PBI.",c:"Marque só o que está de fato pronto. PBI sem Feature não fica Ready. Faltou critério = Em refinamento, não entra na sprint.",u:"Portão entre refinamento e sprint.",e:"12/12 marcados → Ready. 11/12 → Em refinamento."}
+};
+function blHelpHtml(k){
+  const h=BL_HELP[k]; if(!h) return "";
+  return `<div class="hk">O que é</div>${h.o}<div class="hk">Como preencher</div>${h.c}<div class="hk">Para que serve</div>${h.u}<div class="hk">Exemplo</div><span class="hx">${h.e}</span>`;
+}
+function blCloseHelp(){
+  const pop=$("#blHelpPop"); if(!pop) return;
+  pop.classList.add("hidden");
+  $$(".help-i.open").forEach(b=>b.classList.remove("open"));
+}
+function blOpenHelp(btn){
+  const pop=$("#blHelpPop"); if(!pop) return;
+  const k=btn.dataset.help;
+  if(btn.classList.contains("open")){blCloseHelp();return;}
+  blCloseHelp();
+  pop.innerHTML=blHelpHtml(k);
+  pop.classList.remove("hidden");
+  btn.classList.add("open");
+  const r=btn.getBoundingClientRect();
+  let top=r.bottom+8, left=Math.min(r.left, window.innerWidth-360);
+  if(left<8) left=8;
+  if(top+220>window.innerHeight) top=Math.max(8,r.top-230);
+  pop.style.top=top+"px";
+  pop.style.left=left+"px";
+}
+
+let blItems = [];
+let blType = "pbi";
+const blCollapsed = new Set();
+try{
+  const raw=localStorage.getItem(BL_KEY);
+  blItems = raw ? JSON.parse(raw) : [];
+  if(!Array.isArray(blItems)) blItems=[];
+}catch{ blItems=[]; }
+blItems=blItems.map(blNormalizeItem);
+if(!blItems.length) blItems=blAtlasSeed().map(blNormalizeItem);
+
+function blNormalizeItem(x){
+  const type=x.type==="story"?"pbi":(BL_TYPE_LABEL[x.type]?x.type:"pbi");
+  let status=x.status||"em_refinamento";
+  if(status==="capturado"||status==="esclarecer") status="em_refinamento";
+  if(status==="validado") status="ready";
+  const dor={};
+  BL_DOR.forEach(([k])=>dor[k]=!!(x.dor&&x.dor[k]));
+  if(type==="pbi" && x.parent) dor.dorFeature=true;
+  const item={
+    id:x.id||uid(), type, title:x.title||"Item", parent:x.parent||"",
+    prio:x.prio||"média", status, created:x.created||new Date().toISOString(),
+    estimate:x.estimate||"", owner:x.owner||"", ownerDue:x.ownerDue||"", size:x.size||"",
+    po:x.po||"", bizValue:x.bizValue||"", area:x.area||"", iteration:x.iteration||"", tags:x.tags||"", azure:x.azure||"",
+    dor
+  };
+  BL_TEXT_KEYS.forEach(k=>{ if(item[k]==null) item[k]=x[k]||(k==="accept"?x.accept||"":""); });
+  if(!item.objective && x.desc) item.objective=x.desc;
+  if(!item.module && x.module) item.module=x.module;
+  return item;
+}
+function blDorReady(x){
+  if(x.type!=="pbi") return x.status==="ready";
+  return BL_DOR.every(([k])=>x.dor&&x.dor[k]);
+}
+function blRenderDor(x){
+  const box=$("#blDorBox"); if(!box) return;
+  const src=x&&x.dor||{};
+  box.innerHTML=BL_DOR.map(([k,lab])=>`<label><input type="checkbox" data-dor="${k}" ${src[k]?"checked":""}> ${lab}</label>`).join("");
+  blUpdateDorResult();
+}
+function blReadDor(){
+  const dor={};
+  $$("[data-dor]").forEach(el=>{dor[el.dataset.dor]=el.checked;});
+  return dor;
+}
+function blUpdateDorResult(){
+  const el=$("#blDorResult"); if(!el) return;
+  const dor=blReadDor();
+  const ok=BL_DOR.every(([k])=>dor[k]);
+  const n=BL_DOR.filter(([k])=>dor[k]).length;
+  el.innerHTML=ok
+    ? `<div class="dor-ok">Ready — ${n}/${BL_DOR.length} critérios. Pode entrar na sprint.</div>`
+    : `<div class="dor-no">Em refinamento — ${n}/${BL_DOR.length}. Não entra na sprint até completar o DoR.</div>`;
+}
+
+
+function blAtlasSeed(){
+  const dorOk=Object.fromEntries(BL_DOR.map(([k])=>[k,true]));
+  const dorMid=Object.fromEntries(BL_DOR.map(([k])=>[k,["dorFeature","dorDesc","dorValue","dorPrio"].includes(k)]));
+  const I=(id,type,title,parent,extra={})=>({id,type,title,parent,prio:extra.prio||"média",status:extra.status||"em_refinamento",estimate:extra.estimate||"",size:extra.size||"",owner:extra.owner||"",ownerDue:extra.ownerDue||"",dor:extra.dor||(type==="pbi"?dorMid:{}),created:"2026-08-13T12:00:00.000Z",objective:extra.objective||"",value:extra.value||"",user:extra.user||"",flow:extra.flow||"",scopeIn:extra.scopeIn||"",scopeOut:extra.scopeOut||"",processNow:extra.processNow||"",processNext:extra.processNext||"",requirements:extra.requirements||"",rules:extra.rules||"",data:extra.data||"",permissions:extra.permissions||"",integrations:extra.integrations||"",prototype:extra.prototype||"",accept:extra.accept||"",exceptions:extra.exceptions||"",dependencies:extra.dependencies||"",nfr:extra.nfr||"",risks:extra.risks||"",doubts:extra.doubts||"",links:extra.links||""});
+  return [
+    I("atlas-epic","epic","Atlas — Painel de Autogestão Tríplice (OS 019)","",{status:"em_refinamento",prio:"alta",objective:"Entregar o painel de autogestão tríplice (MTI · Parceiro · Cliente) no Sydle: cadastro base, catálogo/produtos e comercial/integrações.",value:"Parceiro e cliente operam no portal; MTI governa catálogo, homologação e faturamento por fase.",user:"MTI (backoffice), Parceiro (portal), Cliente (portal).",scopeIn:"Fase 1 cadastro base e portal parceiro. Fase 2 catálogo e produtos. Fase 3 comercial e integrações.",scopeOut:"Reembolso e temas fora da OS 019.",links:"Roadmap Portal Parceiro / Cliente · requisitos-finais-produto-catalogo-parceria.md"}),
+    I("atlas-f1","feature","Fase 1 — Cadastro base e Portal Parceiro","atlas-epic",{prio:"alta",status:"ready",objective:"Organização, pessoa, cargo, documentos, assinatura, notificações e acesso do parceiro.",scopeIn:"UO, Pessoa, Cargo, Tipo de Documento, Template, Assinatura, Notificações, Portal Parceiro.",scopeOut:"Catálogo e produto (Fase 2)."}),
+    I("atlas-f2","feature","Fase 2 — Catálogo & Produtos","atlas-epic",{prio:"alta",status:"em_refinamento",objective:"Cadastro, elegibilidade, análise e publicação do catálogo da parceria e do catálogo universal.",value:"Parceiro alimenta produtos; MTI analisa/homologa; publicação ≠ visão do cliente (só após apostila).",scopeIn:"Classes Produto, Catálogo da parceria, Catálogo Universal, CSV, análise MTI/DIREX, telas de gestão.",scopeOut:"OS, orçamento, saldo e consumo operacional (Fase 3). Focais e Unidade DTIC não ficam no Produto.",links:"exports/requisitos-finais-produto-catalogo-parceria.md · exports/fase2-prototipo-final.md"}),
+    I("atlas-f3","feature","Fase 3 — Comercial & Integrações","atlas-epic",{prio:"média",status:"discovery",objective:"Fluxo comercial, dossiê de entrega de valor, autogestão tríplice, pedidos/NF/DAR/pagamentos, convite e integrações.",scopeOut:"Não misturar com cadastro de produto da Fase 2."}),
+    I("pbi-org","pbi","Cadastrar organização / unidade organizacional","atlas-f1",{prio:"alta",status:"ready",size:"cabe",estimate:"8",dor:dorOk,objective:"Registrar a estrutura da empresa parceira/cliente para vincular pessoas e documentos.",user:"MTI e parceiro no cadastro.",scopeIn:"Tipo de estrutura, habilitação, documentos da UO.",scopeOut:"Tributos avançados se já cobertos em outro PBI.",accept:"UO salva com tipo e status.\\nPessoas vinculam-se à UO.\\nDocumentos da UO anexados na aba correta."}),
+    I("pbi-pessoa","pbi","Cadastrar pessoa e vínculos","atlas-f1",{prio:"alta",status:"ready",size:"cabe",estimate:"8",dor:dorOk,objective:"Pessoa física com perfil, vínculo à organização e dados para portal.",user:"Parceiro (próprias pessoas) e MTI.",accept:"Pessoa criada com documento único.\\nVínculo à UO obrigatório.\\nDuplicidade de CPF/CNPJ bloqueada com mensagem."}),
+    I("pbi-cargo","pbi","Cadastrar cargo e workflow de aprovação","atlas-f1",{prio:"média",status:"ready",size:"cabe",estimate:"5",dor:dorOk,objective:"Cargo com regras de quem aprova o quê no cadastro.",accept:"Cargo vinculado à pessoa.\\nWorkflow de aprovação executa conforme cargo."}),
+    I("pbi-doc","pbi","Tipo de documento e template documental","atlas-f1",{prio:"alta",status:"em_refinamento",size:"cabe",estimate:"8",objective:"Tipos e templates para gerar e assinar documentos do cadastro.",user:"MTI configura template; parceiro preenche.",dependencies:"Pessoa e UO existentes.",doubts:"Quais templates são obrigatórios no go-live da Fase 1?"}),
+    I("pbi-assinatura","pbi","Assinatura e notificações","atlas-f1",{prio:"média",status:"em_refinamento",size:"cabe",estimate:"5",objective:"Assinar documentos gerados e notificar os envolvidos.",scopeOut:"Assinatura avançada de contrato comercial (Fase 3)."}),
+    I("pbi-portal-parc","pbi","Acesso do Portal Parceiro","atlas-f1",{prio:"alta",status:"em_refinamento",size:"cabe",estimate:"8",objective:"Parceiro entra no portal e opera o cadastro da própria organização.",user:"Usuário parceiro autenticado.",permissions:"Parceiro só vê a própria parceria.",accept:"Login do parceiro abre o cadastro da sua UO.\\nNão vê dados de outro parceiro."}),
+    I("pbi-produto","pbi","Cadastrar produto (Licença ou Serviço)","atlas-f2",{prio:"crítica",status:"em_refinamento",size:"cabe",estimate:"13",owner:"Lucas Santos",objective:"Registrar o item comercializável que pertence a exatamente um Catálogo da parceria. Unidade de venda; não confundir com Tipos de contratação 1/2/3.",value:"Parceiro e MTI cadastram no Sydle em vez de planilha. Alimenta CSV, análise, publicação e, na Fase 3, contrato/OS via snapshot da versão.",user:"Parceiro (portal) e MTI (backoffice).",flow:"Abrir catálogo da parceria → novo produto → preencher página única → salvar rascunho → enviar à análise.",scopeIn:"Página única; Tipo Licença|Serviço; Grupo; Métrica; Cobrança; Valor unitário; Universal e Individualizado; condicionais de serviço.",scopeOut:"Focais e Unidade DTIC. Custo/markup/%. Consumo OS/orçamento/saldo. Cobrança “sob demanda”.",processNow:"Planilha e CSV manuais; análise por e-mail.",processNext:"Formulário único no catálogo; campos de serviço só se Tipo=Serviço; card da lista com nome+tipo+status.",requirements:"RF-PROD-01 a RF-PROD-10 (requisitos finais produto/catálogo).",rules:"RN-P-01 um produto um catálogo.\\nRN-P-02 Universal e Individualizado independentes.\\nRN-P-04 Cobrança Mensal · Anual · Conforme homologação.\\nRN-P-05 Focais só no catálogo.",data:"Obrigatórios: nome, SKU, tipo, grupo, catálogo, métrica, cobrança, valor unitário, universal, individualizado. Complexidade/coeficiente/peso/qtde só Serviço.",permissions:"Parceiro cria/edita rascunho. MTI analisa, pede ajuste, aprova, reprova, paralisa.",prototype:"Atlas - Protótipo → Fase 2 · Catálogo & Produtos · classe Produto.",accept:"Produto exige catálogo.\\nTipo Serviço exibe complexidade; Licença oculta.\\nCard não mostra cobrança, métrica nem modelo de venda.\\nFocais não aparecem no formulário de produto.",exceptions:"Sem catálogo: bloquear gravação.\\nTipo vazio: não mostrar bloco de serviço.",dependencies:"Feature Fase 2 e PBI Catálogo da parceria.",nfr:"Auditoria de envio à análise (usuário, data, ação).",risks:"Modelo de venda ainda provisório (Por Licença · Serviço · Pacote).",doubts:"Confirmar se Modelo de venda permanece obrigatório no go-live.",links:"exports/requisitos-finais-produto-catalogo-parceria.md"}),
+    I("pbi-cat","pbi","Catálogo da parceria (versão, focais, DTIC)","atlas-f2",{prio:"crítica",status:"em_refinamento",size:"cabe",estimate:"13",objective:"Organizar o cardápio comercial da parceria: versão, produtos, focais, Unidade DTIC e elegibilidade.",value:"Camada entre Produto e Catálogo Universal. Publicar ≠ cliente ver (só após apostila).",user:"MTI cria o catálogo após parceria aprovada; parceiro alimenta produtos.",flow:"Parceria aprovada → MTI cria catálogo → parceiro inclui produtos → MTI analisa → homologa → publica → apostila.",scopeIn:"Nome, versão, versão anterior, parceria, solução, focais vendas/pós, Unidade DTIC, toggles universal/serviços, estrutura por complexidade.",scopeOut:"Focais no Produto ou no Catálogo Universal. Consumo do cliente.",rules:"Cada produto aponta para um catálogo.\\nSe Universal=Sim pode apontar ao Catálogo Universal.\\nCliente só vê após apostila no contrato.",accept:"Focais e DTIC editáveis só neste catálogo.\\nVersão anterior visível no versionamento.\\nPublicar não libera visão do cliente sem apostila.",dependencies:"Parceria cadastrada.",links:"exports/documentacao-classe-catalogo.md"}),
+    I("pbi-univ","pbi","Catálogo Universal","atlas-f2",{prio:"alta",status:"em_refinamento",size:"cabe",estimate:"8",objective:"Agrupar catálogos de parceria elegíveis (Universal=Sim) para oferta transversal.",scopeOut:"Não cadastrar focais aqui. Sem fator de conversão no cadastro de crédito N3.",rules:"Sem fator no cadastro N3; conversão no consumo Fase 3.",accept:"Só catálogos com Universal=Sim entram.\\nFocais não aparecem nesta classe.",dependencies:"PBI Catálogo da parceria."}),
+    I("pbi-csv","pbi","Importar e exportar CSV / PDF de produtos","atlas-f2",{prio:"alta",status:"em_refinamento",size:"cabe",estimate:"8",objective:"Parceiro envia lote de produtos e a MTI exporta/gera PDF.",requirements:"RF-PROD-07.",accept:"CSV inválido lista linhas com erro e não publica.\\nExport reflete os campos oficiais da Fase 2.",dependencies:"PBI Cadastrar produto."}),
+    I("pbi-analise","pbi","Análise MTI e homologação DIREX","atlas-f2",{prio:"alta",status:"em_refinamento",size:"cabe",estimate:"8",objective:"Fila de análise: aprovar, pedir ajuste, reprovar, paralisar; homologação institucional de preço.",user:"Analista MTI / DIREX.",flow:"Produto/catálogo enviado → fila → decisão → status de fluxo atualiza.",accept:"Ajuste devolve ao parceiro com motivo.\\nHomologado registra data DIREX quando aplicável.",permissions:"Só MTI decide análise. Parceiro só responde ajuste."}),
+    I("pbi-lista","pbi","Listagens e cards de gestão","atlas-f2",{prio:"média",status:"em_refinamento",size:"cabe",estimate:"5",objective:"Lista de produtos em card: nome + tipo (Licença/Serviço) + status. Sem cobrança, métrica e modelo de venda no card.",accept:"Card mostra só nome, tipo e status.\\nFiltro por catálogo e status funciona.",dependencies:"PBI Cadastrar produto."}),
+    I("pbi-comercial","pbi","Fluxo comercial e dossiê de entrega de valor","atlas-f3",{prio:"média",status:"discovery",size:"dividir",objective:"Operar proposta/contrato e o dossiê de entrega de valor nas três visões.",scopeOut:"Cadastro de catálogo/produto (já é Fase 2).",doubts:"Quais telas do dossiê entram no primeiro incremento da Fase 3?"}),
+    I("pbi-triplice","pbi","Autogestão tríplice: visões MTI · Parceiro · Cliente","atlas-f3",{prio:"alta",status:"discovery",objective:"Mesmos dados, visões e permissões distintas por papel.",accept:"MTI vê governança.\\nParceiro vê a própria operação.\\nCliente não vê rascunho nem análise."}),
+    I("pbi-fin","pbi","Pedidos, NF, DAR e pagamentos","atlas-f3",{prio:"média",status:"discovery",size:"grande",objective:"Ciclo financeiro pós-contrato.",scopeOut:"Preço de catálogo (Fase 2) só como snapshot da versão homologada."}),
+    I("pbi-convite","pbi","Convite de cadastro","atlas-f3",{prio:"média",status:"discovery",objective:"Convidar organização/pessoa a completar o cadastro no portal.",dependencies:"Pessoa e Portal Parceiro da Fase 1."}),
+    I("pbi-int","pbi","Integrações Protheus · ServiceNow · HCMX","atlas-f3",{prio:"alta",status:"discovery",size:"dividir",objective:"Sincronizar códigos, chamados e dados de pessoas/contratos com os sistemas da MTI.",integrations:"Protheus (itens/códigos), ServiceNow (chamados), HCMX (pessoas).",risks:"Contrato de API e ambiente HML ainda não fechados."}),
+    I("tsk-cond","task","Campos condicionais Licença vs Serviço","pbi-produto",{status:"em_refinamento",estimate:"4h",objective:"Exibir Complexidade, Coeficiente, Peso e Quantidade da métrica só se Tipo = Serviço."}),
+    I("tsk-univ-ind","task","Toggles Universal e Individualizado independentes","pbi-produto",{status:"em_refinamento",estimate:"2h",objective:"Permitir Sim/Não em ambos, sem exclusão mútua (RN-P-02)."}),
+    I("tsk-card","task","Card da lista sem cobrança/métrica/modelo","pbi-lista",{status:"em_refinamento",estimate:"3h"}),
+    I("tsk-focais","task","Focais e DTIC somente no catálogo da parceria","pbi-cat",{status:"em_refinamento",estimate:"3h",objective:"Não renderizar focais no Produto nem no Catálogo Universal."}),
+    I("bug-cobranca","bug","Remover cobrança Sob demanda da lista da Fase 2","pbi-produto",{prio:"alta",status:"em_refinamento",objective:"A lista oficial é Mensal · Anual · Conforme homologação. Consumo via OS não é valor desta lista."})
+  ];
+}
+function blLoadAtlasExample(force){
+  if(blItems.length && !force){
+    if(!confirm("Substituir o backlog atual pelo exemplo hierárquico do Projeto Atlas?")) return;
+  }
+  blItems=blAtlasSeed().map(blNormalizeItem);
+  blPersist();
+  blCollapsed.clear();
+  blRender();
+}
+
+function blPersist(){
+  try{localStorage.setItem(BL_KEY,JSON.stringify(blItems));}
+  catch(e){console.warn("Não foi possível salvar o backlog.",e);}
+}
+function blById(id){return blItems.find(x=>x.id===id);}
+function blChildren(id){
+  return blItems.filter(x=>x.parent===id).sort((a,b)=>(BL_RANK[a.type]-BL_RANK[b.type])||a.title.localeCompare(b.title,"pt-BR"));
+}
+function blDescendants(id){
+  const out=[];
+  const walk=pid=>blChildren(pid).forEach(c=>{out.push(c);walk(c.id);});
+  walk(id);
+  return out;
+}
+function blWouldCycle(childId,parentId){
+  if(!parentId||childId===parentId) return true;
+  let cur=blById(parentId);
+  const seen=new Set();
+  while(cur){
+    if(cur.id===childId||seen.has(cur.id)) return true;
+    seen.add(cur.id);
+    cur=cur.parent?blById(cur.parent):null;
+  }
+  return false;
+}
+function blAllowedParents(type,excludeId){
+  const allowed=BL_PARENT_OF[type]||[];
+  if(!allowed.length) return [];
+  return blItems.filter(p=>allowed.includes(p.type)&&p.id!==excludeId&&!blWouldCycle(excludeId,p.id))
+    .sort((a,b)=>(BL_RANK[a.type]-BL_RANK[b.type])||a.title.localeCompare(b.title,"pt-BR"));
+}
+function blFillParents(selected){
+  const sel=$("#blParent");
+  if(!sel) return;
+  const exclude=$("#blEditId").value||"";
+  const parents=blAllowedParents(blType,exclude);
+  sel.innerHTML=[`<option value="">— raiz (sem pai) —</option>`].concat(
+    parents.map(p=>`<option value="${p.id}" ${p.id===selected?"selected":""}>${BL_TYPE_LABEL[p.type]} · ${escapeHtml(p.title)}</option>`)
+  ).join("");
+}
+function blFillTypes(){
+  $("#blTypeGrid").innerHTML=BL_TYPES.map(t=>`<button type="button" data-bl-type="${t.id}" class="${blType===t.id?"active":""}">${t.label}</button>`).join("");
+  const ft=$("#blFilterType");
+  if(ft && !ft.dataset.ready){
+    ft.dataset.ready="1";
+    ft.innerHTML=`<option value="">Todos os tipos</option>`+BL_TYPES.map(t=>`<option value="${t.id}">${t.label}</option>`).join("");
+  }
+  blFillParents($("#blParent")?.value||"");
+}
+function blClearForm(){
+  $("#blEditId").value="";
+  $("#blTitle").value="";
+  ["#blEstimate","#blOwner","#blOwnerDue","#blPo","#blBizValue","#blArea","#blIteration","#blTags","#blAzure"].forEach(s=>{if($(s)) $(s).value="";});
+  $("#blSize").value="";
+  $("#blPrio").value="média";
+  $("#blStatus").value="em_refinamento";
+  const ids=["blObjective","blValue","blUser","blFlow","blScopeIn","blScopeOut","blProcessNow","blProcessNext","blRequirements","blRules","blData","blPermissions","blIntegrations","blPrototype","blAccept","blExceptions","blDependencies","blNfr","blRisks","blDoubts","blLinks"];
+  ids.forEach(id=>{const el=$("#"+id); if(el) el.value="";});
+  blType="pbi";
+  $("#blSaveBtn").textContent="+ Capturar";
+  blFillTypes();
+  blFillParents("");
+  blRenderDor({});
+}
+function blSet(id,val){const el=$(id); if(el) el.value=val??"";}
+function blGet(id){const el=$(id); return el?el.value.trim():"";}
+function blEdit(id){
+  const x=blById(id); if(!x) return;
+  $("#blEditId").value=x.id;
+  blSet("#blTitle", x.title);
+  blSet("#blPrio", x.prio||"média");
+  blSet("#blStatus", x.status||"em_refinamento");
+  blSet("#blEstimate", x.estimate);
+  blSet("#blSize", x.size);
+  blSet("#blOwner", x.owner);
+  blSet("#blOwnerDue", x.ownerDue);
+  blSet("#blPo", x.po);
+  blSet("#blBizValue", x.bizValue);
+  blSet("#blArea", x.area);
+  blSet("#blIteration", x.iteration);
+  blSet("#blTags", x.tags);
+  blSet("#blAzure", x.azure);
+  blSet("#blObjective", x.objective);
+  blSet("#blValue", x.value);
+  blSet("#blUser", x.user);
+  blSet("#blFlow", x.flow);
+  blSet("#blScopeIn", x.scopeIn);
+  blSet("#blScopeOut", x.scopeOut);
+  blSet("#blProcessNow", x.processNow);
+  blSet("#blProcessNext", x.processNext);
+  blSet("#blRequirements", x.requirements);
+  blSet("#blRules", x.rules);
+  blSet("#blData", x.data);
+  blSet("#blPermissions", x.permissions);
+  blSet("#blIntegrations", x.integrations);
+  blSet("#blPrototype", x.prototype);
+  blSet("#blAccept", x.accept);
+  blSet("#blExceptions", x.exceptions);
+  blSet("#blDependencies", x.dependencies);
+  blSet("#blNfr", x.nfr);
+  blSet("#blRisks", x.risks);
+  blSet("#blDoubts", x.doubts);
+  blSet("#blLinks", x.links);
+  blType=x.type||"pbi";
+  $("#blSaveBtn").textContent="Salvar item";
+  blFillTypes();
+  blFillParents(x.parent||"");
+  blRenderDor(x);
+}
+function blSave(){
+  const title=blGet("#blTitle");
+  if(!title){alert("Informe um título.");return;}
+  let parent=blGet("#blParent");
+  const id=$("#blEditId").value||uid();
+  if(blType==="pbi" && !parent){
+    alert("PBI precisa estar vinculado à Feature correta.");
+    return;
+  }
+  if(parent && (BL_PARENT_OF[blType]||[]).length && !blAllowedParents(blType,id).some(p=>p.id===parent)){
+    alert("Pai inválido. Hierarquia: Epic → Feature → PBI → Task.");
+    return;
+  }
+  if(parent && blWouldCycle(id,parent)) parent="";
+  const dor=blReadDor();
+  if(blType==="pbi" && parent) dor.dorFeature=true;
+  let status=$("#blStatus").value||"em_refinamento";
+  const ready=blType!=="pbi" || BL_DOR.every(([k])=>dor[k]);
+  if(blType==="pbi" && status==="ready" && !ready){
+    status="em_refinamento";
+    alert("DoR incompleto: o PBI permanece Em refinamento e não entra na sprint.");
+  }
+  if(blType==="pbi" && ready && status==="em_refinamento") status="ready";
+  if($("#blSize").value==="dividir"||$("#blSize").value==="grande") status="precisa_dividir";
+  const payload={
+    id, type:blType, title, parent,
+    prio:$("#blPrio").value||"média", status, dor,
+    estimate:blGet("#blEstimate"), size:$("#blSize").value||"",
+    owner:blGet("#blOwner"), ownerDue:blGet("#blOwnerDue"),
+    po:blGet("#blPo"), bizValue:blGet("#blBizValue"), area:blGet("#blArea"),
+    iteration:blGet("#blIteration"), tags:blGet("#blTags"), azure:blGet("#blAzure"),
+    objective:blGet("#blObjective"), value:blGet("#blValue"), user:blGet("#blUser"),
+    flow:blGet("#blFlow"), scopeIn:blGet("#blScopeIn"), scopeOut:blGet("#blScopeOut"),
+    processNow:blGet("#blProcessNow"), processNext:blGet("#blProcessNext"),
+    requirements:blGet("#blRequirements"), rules:blGet("#blRules"), data:blGet("#blData"),
+    permissions:blGet("#blPermissions"), integrations:blGet("#blIntegrations"),
+    prototype:blGet("#blPrototype"), accept:blGet("#blAccept"), exceptions:blGet("#blExceptions"),
+    dependencies:blGet("#blDependencies"), nfr:blGet("#blNfr"), risks:blGet("#blRisks"),
+    doubts:blGet("#blDoubts"), links:blGet("#blLinks"),
+    created:new Date().toISOString()
+  };
+  const idx=blItems.findIndex(x=>x.id===payload.id);
+  if(idx>=0){payload.created=blItems[idx].created||payload.created; blItems[idx]=payload;}
+  else blItems.unshift(payload);
+  blPersist();
+  blClearForm();
+  blRender();
+}
+function blAddChild(parentId,type){
+  const p=blById(parentId); if(!p) return;
+  blType=type|| (p.type==="epic"?"feature":p.type==="feature"?"pbi":"task");
+  $("#blEditId").value="";
+  blSet("#blTitle","");
+  $("#blPrio").value="média";
+  $("#blStatus").value="em_refinamento";
+  $("#blSaveBtn").textContent="+ Capturar filho";
+  blFillTypes();
+  blFillParents(parentId);
+  blRenderDor({dor:{dorFeature:blType==="pbi"}});
+  $("#blTitle").focus();
+}
+function blRemove(id){
+  const kids=blDescendants(id);
+  const msg=kids.length
+    ? `Excluir este item e ${kids.length} filho(s)?`
+    : "Excluir este item do backlog?";
+  if(!confirm(msg)) return;
+  const drop=new Set([id,...kids.map(k=>k.id)]);
+  blItems=blItems.filter(x=>!drop.has(x.id));
+  blPersist();
+  if($("#blEditId").value===id) blClearForm();
+  blRender();
+}
+function blFiltered(){
+  const q=($("#blSearch").value||"").toLowerCase().trim();
+  const type=$("#blFilterType").value;
+  const status=$("#blFilterStatus").value;
+  return blItems.filter(x=>{
+    if(type&&x.type!==type) return false;
+    if(status&&x.status!==status){
+      if(status==="em_refinamento" && ["capturado","esclarecer"].includes(x.status)) {/* ok */}
+      else if(status==="ready" && x.status==="validado") {}
+      else return false;
+    }
+    if(!q) return true;
+    return [x.title,x.objective,x.value,x.accept,x.doubts,x.user,x.requirements,BL_TYPE_LABEL[x.type]].join(" ").toLowerCase().includes(q);
+  });
+}
+function blWithAncestors(items){
+  const keep=new Set(items.map(x=>x.id));
+  items.forEach(x=>{
+    let p=x.parent?blById(x.parent):null;
+    while(p){
+      keep.add(p.id);
+      p=p.parent?blById(p.parent):null;
+    }
+  });
+  return blItems.filter(x=>keep.has(x.id));
+}
+function blGroupKey(x,mode){
+  if(mode==="module") return x.module||"Sem módulo";
+  if(mode==="prio") return (x.prio||"média");
+  return BL_TYPE_LABEL[x.type]||x.type;
+}
+function blCardHtml(x,level,hasKids,isLast){
+  const editing=$("#blEditId").value;
+  const nKids=blChildren(x.id).length;
+  const nAll=blDescendants(x.id).length;
+  const collapsed=blCollapsed.has(x.id);
+  const indent=Array.from({length:level},(_,i)=>`<span class="bl-indent-unit ${i===level-1&&isLast?"last":""}"></span>`).join("");
+  const toggle=hasKids
+    ? `<button type="button" class="bl-toggle" data-bl-toggle="${x.id}" title="${collapsed?"Expandir":"Recolher"}">${collapsed?"▸":"▾"}</button>`
+    : `<button type="button" class="bl-toggle ghost" tabindex="-1">▾</button>`;
+  const childType=x.type==="epic"?"feature":x.type==="feature"?"pbi":x.type==="pbi"?"task":"";
+  const childBtn=childType?`<button class="btn small" data-bl-child="${x.id}" data-bl-child-type="${childType}">+ Filho</button>`:"";
+  const ready=blDorReady(x);
+  const st=BL_STATUS_LABEL[x.status]||x.status;
+  const acceptLines=(x.accept||"").split("\n").filter(Boolean).slice(0,3);
+  return `<div class="bl-tree-row">
+    <div class="bl-indent">${indent}</div>
+    <article class="bl-card bl-card-wrap ${editing===x.id?"active":""} ${level?"child":""}">
+      <div class="bl-card-head">
+        <div class="bl-title-row">
+          ${toggle}
+          <div>
+            <strong>${escapeHtml(x.title)}</strong>
+            ${nAll?`<div class="bl-meta">${nKids} filho(s) direto · ${nAll} no ramo</div>`:""}
+          </div>
+        </div>
+        <span class="bl-actions">
+          ${childBtn}
+          <button class="btn small" data-bl-edit="${x.id}">Editar</button>
+          <button class="btn small danger" data-bl-del="${x.id}">×</button>
+        </span>
+      </div>
+      ${x.objective?`<p>${escapeHtml(x.objective)}</p>`:(x.desc?`<p>${escapeHtml(x.desc)}</p>`:"")}
+      ${acceptLines.length?`<p><em>${acceptLines.map(escapeHtml).join(" · ")}</em></p>`:""}
+      <div class="bl-tags">
+        <span class="chip ${x.type}">${BL_TYPE_LABEL[x.type]||x.type}</span>
+        <span class="chip status-${x.status}">${escapeHtml(st)}</span>
+        ${x.type==="pbi"?`<span class="chip ${ready?"status-ready":"status-em_refinamento"}">${ready?"DoR OK":"DoR incompleto"}</span>`:""}
+        <span class="chip prio-${x.prio}">${escapeHtml(x.prio||"média")}</span>
+        ${x.estimate?`<span class="chip">${escapeHtml(x.estimate)}</span>`:""}
+        ${x.owner?`<span class="chip">${escapeHtml(x.owner)}</span>`:""}
+      </div>
+    </article>
+  </div>`;
+}
+function blTreeHtml(visible){
+  const vis=new Set(visible.map(x=>x.id));
+  const byParent=id=>visible.filter(x=>x.parent===id).sort((a,b)=>(BL_RANK[a.type]-BL_RANK[b.type])||a.title.localeCompare(b.title,"pt-BR"));
+  const roots=visible.filter(x=>!x.parent||!vis.has(x.parent))
+    .sort((a,b)=>(BL_RANK[a.type]-BL_RANK[b.type])||a.title.localeCompare(b.title,"pt-BR"));
+  const rows=[];
+  const walk=(node,level,isLast)=>{
+    const kids=byParent(node.id);
+    rows.push(blCardHtml(node,level,kids.length>0,isLast));
+    if(kids.length && !blCollapsed.has(node.id)){
+      kids.forEach((c,i)=>walk(c,level+1,i===kids.length-1));
+    }
+  };
+  roots.forEach((r,i)=>walk(r,0,i===roots.length-1));
+  return rows.join("");
+}
+function blRender(){
+  const board=$("#blBoard");
+  if(!board) return;
+  const matched=blFiltered();
+  const visible=blWithAncestors(matched);
+  $("#blCountHint").textContent=`${blItems.length} item(ns) · ${matched.length} no filtro`;
+  const pbis=blItems.filter(x=>x.type==="pbi"||x.type==="story");
+  const ready=pbis.filter(blDorReady).length;
+  const split=pbis.filter(x=>x.status==="precisa_dividir"||x.size==="dividir"||x.size==="grande").length;
+  const doubts=blItems.filter(x=>x.doubts).length;
+  const blocked=blItems.filter(x=>x.status==="bloqueado"||x.status==="devolvido").length;
+  const out=$("#blOutcome");
+  if(out) out.innerHTML=`
+    <span class="stat">Ready: ${ready}</span>
+    <span class="stat warn">Em refinamento: ${pbis.length-ready}</span>
+    <span class="stat">Dividir: ${split}</span>
+    <span class="stat">Dúvidas: ${doubts}</span>
+    <span class="stat">Devolvidos/bloqueados: ${blocked}</span>`;
+  if(!visible.length){
+    board.innerHTML=`<div class="empty">Nenhum item. Capture o que o cliente descrever no kickoff.</div>`;
+    return;
+  }
+  const mode=$("#blGroupBy").value||"tree";
+  if(mode==="tree"){
+    board.innerHTML=`<section class="bl-group"><h3>Backlog hierárquico</h3>${blTreeHtml(visible)}</section>`;
+    return;
+  }
+  const groups=new Map();
+  matched.forEach(x=>{
+    const k=blGroupKey(x,mode);
+    if(!groups.has(k)) groups.set(k,[]);
+    groups.get(k).push(x);
+  });
+  board.innerHTML=[...groups.entries()].map(([name,list])=>`
+    <section class="bl-group">
+      <h3>${escapeHtml(name)} · ${list.length}</h3>
+      ${blTreeHtml(list)}
+    </section>`).join("");
+}
+function blExport(){
+  const blob=new Blob([JSON.stringify({backlog:blItems},null,2)],{type:"application/json;charset=utf-8"});
+  const a=document.createElement("a");a.href=URL.createObjectURL(blob);
+  a.download=`backlog-${new Date().toISOString().slice(0,10)}.json`;a.click();
+  setTimeout(()=>URL.revokeObjectURL(a.href),500);
+}
+function blImport(file){
+  if(!file) return;
+  const reader=new FileReader();
+  reader.onload=()=>{
+    try{
+      const parsed=JSON.parse(String(reader.result||"").replace(/^\uFEFF/,""));
+      const list=Array.isArray(parsed)?parsed:parsed.backlog;
+      if(!Array.isArray(list)) throw new Error("JSON sem lista de backlog");
+      blItems=list.map(blNormalizeItem);
+      blPersist();
+      blClearForm();
+      blRender();
+      alert("Backlog carregado.");
+    }catch(e){alert("Arquivo de backlog inválido.");}
+  };
+  reader.readAsText(file,"UTF-8");
+}
+function showAppTab(name){
+  const isRoad=name!=="backlog";
+  $("#viewRoadmap").classList.toggle("hidden",!isRoad);
+  $("#viewBacklog").classList.toggle("hidden",isRoad);
+  $$("[data-app-tab]").forEach(b=>b.classList.toggle("active",b.dataset.appTab===name));
+  if(isRoad) requestAnimationFrame(()=>render());
+  else {applyLayoutFlags();blRender();}
+}
+document.addEventListener("click",event=>{
+  const helpBtn=event.target.closest(".help-i");
+  if(helpBtn){event.preventDefault();blOpenHelp(helpBtn);return;}
+  if(!event.target.closest("#blHelpPop")) blCloseHelp();
+  const tab=event.target.closest("[data-app-tab]");
+  if(tab){showAppTab(tab.dataset.appTab);return;}
+  const acc=event.target.closest("[data-bl-acc]");
+  if(acc){acc.parentElement.classList.toggle("closed");return;}
+  const typeBtn=event.target.closest("[data-bl-type]");
+  if(typeBtn){blType=typeBtn.dataset.blType;blFillTypes();return;}
+  const tog=event.target.closest("[data-bl-toggle]");
+  if(tog){
+    const id=tog.dataset.blToggle;
+    if(blCollapsed.has(id)) blCollapsed.delete(id); else blCollapsed.add(id);
+    blRender();return;
+  }
+  const child=event.target.closest("[data-bl-child]");
+  if(child){blAddChild(child.dataset.blChild,child.dataset.blChildType);return;}
+  const edit=event.target.closest("[data-bl-edit]");
+  if(edit){blEdit(edit.dataset.blEdit);return;}
+  const del=event.target.closest("[data-bl-del]");
+  if(del){blRemove(del.dataset.blDel);}
+});
+$("#blSaveBtn").addEventListener("click",blSave);
+$("#blClearBtn").addEventListener("click",blClearForm);
+$("#blSearch").addEventListener("input",blRender);
+$("#blFilterType").addEventListener("change",blRender);
+$("#blFilterStatus").addEventListener("change",blRender);
+$("#blGroupBy").addEventListener("change",blRender);
+document.addEventListener("change",event=>{
+  if(event.target.matches("[data-dor]")) blUpdateDorResult();
+});
+$("#blExpandAll").addEventListener("click",()=>{blCollapsed.clear();blRender();});
+$("#blCollapseAll").addEventListener("click",()=>{
+  blItems.forEach(x=>{if(blChildren(x.id).length) blCollapsed.add(x.id);});
+  blRender();
+});
+$("#blExportBtn").addEventListener("click",blExport);
+$("#blImportBtn").addEventListener("click",()=>$("#blImportFile").click());
+function blPersistTreeFlag(){
+  try{localStorage.setItem("roadmap-backlog-tree-hidden", blHideTree?"1":"0");}catch(e){}
+}
+function blToggleTree(){
+  blHideTree=!blHideTree;
+  blPersistTreeFlag();
+  applyLayoutFlags();
+}
+$("#blToggleTreeBtn").addEventListener("click",blToggleTree);
+$("#blShowTreeBtn").addEventListener("click",blToggleTree);
+$("#blSeedBtn").addEventListener("click",()=>blLoadAtlasExample(false));
+$("#blImportFile").addEventListener("change",e=>{
+  const file=e.target.files&&e.target.files[0];
+  if(file) blImport(file);
+  e.target.value="";
+});
+blFillTypes();
+blFillParents("");
+blRenderDor({});
+applyLayoutFlags();
+blRender();
+try{ if(blItems.length) localStorage.setItem(BL_KEY, JSON.stringify(blItems)); }catch(e){}
+</script>
+</body>
+</html>

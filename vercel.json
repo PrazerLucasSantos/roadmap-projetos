@@ -1,0 +1,9 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "cleanUrls": true,
+  "rewrites": [
+    { "source": "/", "destination": "/roadmap-projetos.html" },
+    { "source": "/roadmap", "destination": "/roadmap-projetos.html" },
+    { "source": "/simulador", "destination": "/simulador-elogroup-integer.html" }
+  ]
+}

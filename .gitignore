@@ -1,0 +1,7 @@
+node_modules/
+.vercel/
+powers-main/
+powers-main.zip
+*.backup.html
+.DS_Store
+Thumbs.db

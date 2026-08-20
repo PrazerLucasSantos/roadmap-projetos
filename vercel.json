@@ -1,9 +1,14 @@
-﻿{
-  "$schema": "https://openapi.vercel.sh/vercel.json",
+{
   "outputDirectory": "public",
   "cleanUrls": true,
   "rewrites": [
-    { "source": "/roadmap", "destination": "/index.html" },
-    { "source": "/simulador", "destination": "/simulador.html" }
+    {
+      "source": "/roadmap",
+      "destination": "/index.html"
+    },
+    {
+      "source": "/simulador",
+      "destination": "/simulador.html"
+    }
   ]
 }

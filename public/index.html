@@ -271,6 +271,36 @@
     .help-pop .hk:first-child{margin-top:0}
     .help-pop .hx{color:#FFDEBD}
 
+    .scrum-app{height:100%;overflow:auto;background:var(--bg);padding:18px 20px 32px}
+    .scrum-wrap{max-width:980px;margin:0 auto;display:flex;flex-direction:column;gap:14px}
+    .scrum-hero{background:#fff;border:1px solid var(--line);border-radius:14px;padding:18px 20px;box-shadow:var(--shadow)}
+    .scrum-hero h1{font-family:var(--font-title);font-size:1.55rem;font-weight:500;letter-spacing:-.03em;margin:0;color:var(--blue)}
+    .scrum-hero p{margin:6px 0 0;color:var(--muted);font-size:.9rem;line-height:1.4}
+    .scrum-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+    .scrum-card{background:#fff;border:1px solid var(--line);border-radius:14px;padding:16px 18px;box-shadow:var(--shadow)}
+    .scrum-card h2{font-family:var(--font-title);font-size:1.05rem;font-weight:600;margin:0 0 6px;color:var(--navy)}
+    .scrum-card .lead{margin:0 0 12px;font-size:.82rem;color:var(--muted);line-height:1.4}
+    .scrum-meta{display:flex;flex-wrap:wrap;gap:6px;margin:0 0 12px}
+    .scrum-meta span{background:#F1F4FA;border-radius:999px;padding:5px 10px;font-size:.7rem;font-weight:700;color:var(--navy)}
+    .scrum-block{margin:0 0 12px}
+    .scrum-block:last-child{margin-bottom:0}
+    .scrum-block h3{font-size:.72rem;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:var(--blue);margin:0 0 7px}
+    .scrum-block ul,.scrum-block ol{margin:0;padding-left:18px}
+    .scrum-block li{margin:0 0 5px;font-size:.82rem;line-height:1.4}
+    .scrum-block li strong{color:var(--ink)}
+    .scrum-note{background:#F2F5FF;border:1px solid #D8E0FF;border-radius:10px;padding:10px 12px;font-size:.78rem;line-height:1.4;color:var(--navy)}
+    .scrum-table-wrap{overflow:auto}
+    .scrum-table{width:100%;border-collapse:collapse;font-size:.8rem}
+    .scrum-table th,.scrum-table td{border:1px solid var(--line);padding:9px 10px;text-align:left;vertical-align:top}
+    .scrum-table th{background:#F1F4FA;color:var(--navy);font-size:.72rem;letter-spacing:.04em;text-transform:uppercase}
+    .scrum-steps{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px}
+    .scrum-steps span{display:inline-flex;align-items:center;gap:6px;background:#FCFCFD;border:1px solid var(--line);border-radius:999px;padding:7px 11px;font-size:.75rem;font-weight:700}
+    .scrum-steps i{width:18px;height:18px;border-radius:50%;background:var(--blue);color:#fff;display:inline-flex;align-items:center;justify-content:center;font-style:normal;font-size:.65rem}
+    .scrum-sec{font-family:var(--font-title);font-size:.72rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--blue);margin:4px 0 2px}
+    .scrum-list-plain{margin:0;padding:0;list-style:none}
+    .scrum-list-plain li{margin:0 0 6px;font-size:.82rem;line-height:1.4;padding-left:14px;position:relative}
+    .scrum-list-plain li::before{content:"";position:absolute;left:0;top:.55em;width:6px;height:6px;border-radius:50%;background:var(--blue)}
+
     @media(max-width:900px){
       .app{grid-template-columns:1fr;height:100%;overflow:auto}
       .app.hide-side{overflow:hidden}
@@ -282,6 +312,7 @@
       .backlog-side{height:auto;max-height:none;border-left:0;border-top:1px solid var(--line)}
       .bl-form-grid{grid-template-columns:1fr 1fr}
       .type-grid{grid-template-columns:repeat(3,1fr)}
+      .scrum-grid{grid-template-columns:1fr}
     }
   </style>
 </head>
@@ -290,6 +321,7 @@
   <nav class="app-tabs">
     <button type="button" data-app-tab="roadmap" class="active">Roadmap</button>
     <button type="button" data-app-tab="backlog">Backlog</button>
+    <button type="button" data-app-tab="scrum">Scrum</button>
     </nav>
   <div class="view-host">
   <div class="view-panel" id="viewRoadmap">
@@ -573,6 +605,319 @@
           </div>
         </div>
       </aside>
+    </div>
+  </div>
+  <div class="view-panel hidden" id="viewScrum">
+    <div class="scrum-app">
+      <div class="scrum-wrap">
+        <div class="scrum-hero">
+          <h1>Guia Scrum do projeto</h1>
+          <p>Como usar Roadmap e Backlog neste app, e como conduzir Retro e Planning com o time.</p>
+        </div>
+
+        <p class="scrum-sec">Artefatos do projeto</p>
+        <div class="scrum-grid">
+          <article class="scrum-card">
+            <h2>Roadmap</h2>
+            <p class="lead">Visão macro do projeto no tempo: fases, homologações, cobranças, sprints e marcos. Responde <strong>quando</strong> e <strong>quanto</strong> — não detalha regras de negócio.</p>
+            <div class="scrum-meta">
+              <span>Aba Roadmap</span>
+              <span>Timeline + OS</span>
+              <span>Fases · HML · FAT</span>
+            </div>
+
+            <div class="scrum-block">
+              <h3>Para que serve</h3>
+              <ul>
+                <li>Alinhar stakeholders na sequência de entregas e no calendário da OS.</li>
+                <li>Mostrar janelas de HML, faturamento (FAT) e capacidade por sprint.</li>
+                <li>Conectar valor financeiro (Dados gerais / Automação) ao plano visual.</li>
+              </ul>
+            </div>
+
+            <div class="scrum-block">
+              <h3>Como montar neste app</h3>
+              <ol>
+                <li><strong>Dados gerais</strong> — código da OS, nome, centro de custo, valor, TSL/DSO e datas de início/término.</li>
+                <li><strong>Fases</strong> — blocos de entrega na timeline (ex.: Fase 1, Fase 2, Comercial). Uma fase ≈ Feature no backlog.</li>
+                <li><strong>HML</strong> — janelas de homologação após cada fase (cor peach).</li>
+                <li><strong>Cobranças / Marcação FAT</strong> — datas e valores de faturamento previstos.</li>
+                <li><strong>Sprints</strong> — numeração no cabeçalho do timeline (padrão: 2 semanas, seg→sex).</li>
+                <li><strong>Feriados</strong> — ocultam dias úteis e ajustam duração real.</li>
+                <li><strong>Automação</strong> — divide valor da OS por fase e sugere faturamento (por OS ou por fase); preenche visão/estratégia.</li>
+              </ol>
+            </div>
+
+            <div class="scrum-block">
+              <h3>Boas práticas</h3>
+              <ul class="scrum-list-plain">
+                <li>Atualize datas de fase quando o backlog mudar o escopo — o roadmap é o contrato visual com o cliente.</li>
+                <li>Não coloque regras de tela no card da fase; use o texto da fase só como índice do que entra.</li>
+                <li>Sprints no roadmap = capacidade; itens Ready do backlog = o que cabe nessa capacidade.</li>
+                <li>Marcações FAT devem bater com as datas previstas em Dados gerais.</li>
+              </ul>
+            </div>
+
+            <div class="scrum-note">
+              <strong>Output:</strong> timeline com fases + HML + FAT + sprints, e meta da OS preenchida (valor, faturado, a faturar).
+            </div>
+          </article>
+
+          <article class="scrum-card">
+            <h2>Product Backlog</h2>
+            <p class="lead">Lista ordenada do trabalho a desenvolver. Responde <strong>o quê</strong> e <strong>por quê</strong>. Só item <strong>Ready</strong> (DoR completo) entra no Planning.</p>
+            <div class="scrum-meta">
+              <span>Aba Backlog</span>
+              <span>Epic → Feature → PBI</span>
+              <span>Definition of Ready</span>
+            </div>
+
+            <div class="scrum-block">
+              <h3>Hierarquia (como neste app)</h3>
+              <ol>
+                <li><strong>Epic</strong> — OS / projeto (ex.: Painel de Autogestão).</li>
+                <li><strong>Feature</strong> — fase ou módulo do roadmap (ex.: Fase 2 · Catálogo).</li>
+                <li><strong>PBI</strong> — funcionalidade entregável (ex.: Cadastrar produto).</li>
+                <li><strong>Task / Bug / Spike</strong> — trabalho técnico depois que o PBI está claro.</li>
+              </ol>
+            </div>
+
+            <div class="scrum-block">
+              <h3>Como refinar um PBI</h3>
+              <ol>
+                <li>Preencha <strong>contexto</strong>: objetivo, valor, usuário, fluxo, escopo entra/sai.</li>
+                <li>Preencha <strong>requisitos</strong>: regras, dados, permissões, integrações, exceções, riscos.</li>
+                <li>Escreva <strong>critérios de aceitação</strong> testáveis (um por linha).</li>
+                <li>Marque o <strong>DoR</strong> só do que estiver de fato pronto (12 itens).</li>
+                <li>Status <strong>Ready</strong> só quando DoR completo, Feature vinculada e cabe em 1 sprint.</li>
+              </ol>
+            </div>
+
+            <div class="scrum-block">
+              <h3>Status de refinamento</h3>
+              <ul>
+                <li><strong>Em refinamento</strong> — preenchendo campos.</li>
+                <li><strong>Discovery</strong> — ainda descobrir problema/solução.</li>
+                <li><strong>Precisa dividir</strong> — grande demais para uma sprint.</li>
+                <li><strong>Ready</strong> — DoR ok; candidato ao Planning.</li>
+                <li><strong>Devolvido / Bloqueado</strong> — parado (dúvida, dependência, decisão).</li>
+              </ul>
+            </div>
+
+            <div class="scrum-block">
+              <h3>DoR (checklist do app)</h3>
+              <ul class="scrum-list-plain">
+                <li>Feature correta · objetivo · valor · critérios · protótipo se precisar</li>
+                <li>Regras/dados/permissões · deps · dúvidas resolvidas</li>
+                <li>Cabe na sprint · estimado · priorizado · sem bloqueio</li>
+              </ul>
+            </div>
+
+            <div class="scrum-note">
+              <strong>Output:</strong> árvore priorizada com PBIs Ready no topo, rastreáveis à Feature/fase do roadmap.
+            </div>
+          </article>
+        </div>
+
+        <article class="scrum-card">
+          <h2>Como Roadmap e Backlog se conectam</h2>
+          <div class="scrum-table-wrap">
+            <table class="scrum-table">
+              <thead>
+                <tr>
+                  <th>Roadmap</th>
+                  <th>Backlog</th>
+                  <th>Regra prática</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Projeto / OS (Dados gerais)</td>
+                  <td>Epic</td>
+                  <td>1 Epic por OS/projeto</td>
+                </tr>
+                <tr>
+                  <td>Fase na timeline</td>
+                  <td>Feature</td>
+                  <td>Cada fase vira Feature; PBIs nascem abaixo dela</td>
+                </tr>
+                <tr>
+                  <td>Texto da fase (índice)</td>
+                  <td>Lista de PBIs</td>
+                  <td>Índice no roadmap → detalhe no backlog</td>
+                </tr>
+                <tr>
+                  <td>Sprint no cabeçalho</td>
+                  <td>PBIs Ready</td>
+                  <td>Planning puxa só Ready alinhados à sprint/fase atual</td>
+                </tr>
+                <tr>
+                  <td>HML / FAT</td>
+                  <td>—</td>
+                  <td>Governança e financeiro; não viram PBI (salvo spike de preparação)</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="scrum-steps" style="margin-top:12px">
+            <span><i>1</i> Roadmap define fases e datas</span>
+            <span><i>2</i> Backlog detalha PBIs por Feature</span>
+            <span><i>3</i> DoR → Ready</span>
+            <span><i>4</i> Planning compromete a sprint</span>
+          </div>
+        </article>
+
+        <p class="scrum-sec">Cerimônias</p>
+        <div class="scrum-grid">
+          <article class="scrum-card">
+            <h2>Sprint Retrospective</h2>
+            <p class="lead">Melhorar o <em>como</em> o time trabalha (processo, colaboração, ferramentas) — não reabrir o backlog do produto.</p>
+            <div class="scrum-meta">
+              <span>45–90 min</span>
+              <span>Time de 5–9</span>
+              <span>Foco em processo</span>
+            </div>
+
+            <div class="scrum-block">
+              <h3>Antes</h3>
+              <ul>
+                <li>Reserve espaço seguro: sem culpa, foco em sistema/processo.</li>
+                <li>Traga dados leves: burndown, impedimentos, métricas de fluxo, feedbacks da sprint.</li>
+                <li>Defina quem facilita (idealmente alguém que não “domine” a conversa).</li>
+              </ul>
+            </div>
+
+            <div class="scrum-block">
+              <h3>Durante (fluxo clássico)</h3>
+              <ol>
+                <li><strong>Abertura (5 min)</strong> — lembrar o objetivo e a regra: fatos + impacto, sem ataque pessoal.</li>
+                <li><strong>Coleta (15–20 min)</strong> — o time escreve itens em colunas:
+                  <ul>
+                    <li>O que foi bem</li>
+                    <li>O que pode melhorar</li>
+                    <li>Ideias / experimentos</li>
+                  </ul>
+                </li>
+                <li><strong>Agrupar e votar (10 min)</strong> — themes + dots (2–3 votos por pessoa).</li>
+                <li><strong>Discussão (15–25 min)</strong> — só nos temas mais votados; use <em>5 porquês</em> ou <em>causa → efeito → ação</em>.</li>
+                <li><strong>Ações (10 min)</strong> — 1 a 3 melhorias pequenas, com dono claro e prazo na próxima sprint.</li>
+                <li><strong>Fechamento</strong> — confirmar ações e o que entra no board (ex.: DoD inclui X, daily 15 min, pairing nas PRs).</li>
+              </ol>
+            </div>
+
+            <div class="scrum-block">
+              <h3>Boas práticas</h3>
+              <ul>
+                <li>Máximo <strong>3 ações</strong>; o resto fica no parking lot.</li>
+                <li>Ação boa: <em>“Fazer code review no mesmo dia, com checklist de 5 itens”</em> — não <em>“melhorar comunicação”</em>.</li>
+                <li>Revise as ações da retro anterior no início da próxima.</li>
+              </ul>
+            </div>
+          </article>
+
+          <article class="scrum-card">
+            <h2>Sprint Planning</h2>
+            <p class="lead">Responder duas perguntas: <strong>o que</strong> entregamos nesta sprint e <strong>como</strong> vamos fazer.</p>
+            <div class="scrum-meta">
+              <span>1–2 h (time pequeno)</span>
+              <span>até ~4 h (sprint 2 sem.)</span>
+              <span>Foco em entrega</span>
+            </div>
+
+            <div class="scrum-block">
+              <h3>Antes</h3>
+              <ul>
+                <li>Backlog refinado (itens claros, estimados, prontos — Definition of Ready).</li>
+                <li>Product Owner com meta de sprint em mente e prioridades definidas.</li>
+                <li>Capacidade real do time (férias, feriados, suporte, WIP).</li>
+              </ul>
+            </div>
+
+            <div class="scrum-block">
+              <h3>Parte 1 — O quê (PO + time)</h3>
+              <ol>
+                <li>PO apresenta o <strong>Sprint Goal</strong> (1 frase de valor de negócio).</li>
+                <li>Time puxa itens do topo do backlog alinhados ao goal.</li>
+                <li>Confirma entendimento, critérios de aceite e dependências.</li>
+                <li>Para quando a capacidade for atingida (não “encher” o sprint).</li>
+              </ol>
+            </div>
+
+            <div class="scrum-block">
+              <h3>Parte 2 — Como (time)</h3>
+              <ol>
+                <li>Quebra itens em tarefas técnicas (se fizer sentido).</li>
+                <li>Identifica riscos, spikes, pairing necessário.</li>
+                <li>Confirma <strong>Definition of Done</strong> e o que “Done” significa nesta sprint.</li>
+                <li>Fecha com: Sprint Goal + backlog da sprint + compromisso do time.</li>
+              </ol>
+            </div>
+
+            <div class="scrum-note">
+              <strong>Resultado esperado:</strong> Sprint Goal visível, backlog da sprint selecionado, time com confiança de que é factível e impedimentos já sinalizados.
+            </div>
+          </article>
+        </div>
+
+        <article class="scrum-card">
+          <h2>Diferença rápida</h2>
+          <div class="scrum-table-wrap">
+            <table class="scrum-table">
+              <thead>
+                <tr>
+                  <th></th>
+                  <th>Roadmap</th>
+                  <th>Backlog</th>
+                  <th>Planning</th>
+                  <th>Retro</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <th>Foco</th>
+                  <td>Quando / valor da OS</td>
+                  <td>O quê / por quê</td>
+                  <td>Compromisso da sprint</td>
+                  <td>Processo do time</td>
+                </tr>
+                <tr>
+                  <th>Pergunta-chave</th>
+                  <td>Quando entregamos e faturamos?</td>
+                  <td>O que precisa existir e está Ready?</td>
+                  <td>O que e como nesta sprint?</td>
+                  <td>Como melhorar o jeito de trabalhar?</td>
+                </tr>
+                <tr>
+                  <th>Dono principal</th>
+                  <td>PO + TSL/DSO</td>
+                  <td>PO (+ time no refinamento)</td>
+                  <td>PO (o quê) + Time (como)</td>
+                  <td>Time (facilitador)</td>
+                </tr>
+                <tr>
+                  <th>Output</th>
+                  <td>Timeline + FAT + sprints</td>
+                  <td>PBIs priorizados e Ready</td>
+                  <td>Sprint Goal + itens</td>
+                  <td>1–3 ações de melhoria</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </article>
+
+        <article class="scrum-card">
+          <h2>Ordem típica do ciclo</h2>
+          <div class="scrum-steps">
+            <span><i>1</i> Roadmap — fases, HML, FAT, sprints</span>
+            <span><i>2</i> Backlog — refinar até Ready</span>
+            <span><i>3</i> Planning — comprometer a sprint</span>
+            <span><i>4</i> Execução + Daily</span>
+            <span><i>5</i> Review — demo + feedback</span>
+            <span><i>6</i> Retro — 1–3 ações</span>
+          </div>
+        </article>
+      </div>
     </div>
   </div>
   </div>
@@ -2595,12 +2940,15 @@ function blImport(file){
   reader.readAsText(file,"UTF-8");
 }
 function showAppTab(name){
-  const isRoad=name!=="backlog";
+  const isRoad=name==="roadmap";
+  const isBack=name==="backlog";
+  const isScrum=name==="scrum";
   $("#viewRoadmap").classList.toggle("hidden",!isRoad);
-  $("#viewBacklog").classList.toggle("hidden",isRoad);
+  $("#viewBacklog").classList.toggle("hidden",!isBack);
+  $("#viewScrum").classList.toggle("hidden",!isScrum);
   $$("[data-app-tab]").forEach(b=>b.classList.toggle("active",b.dataset.appTab===name));
   if(isRoad) requestAnimationFrame(()=>render());
-  else {applyLayoutFlags();blRender();}
+  else if(isBack){applyLayoutFlags();blRender();}
 }
 document.addEventListener("click",event=>{
   const helpBtn=event.target.closest(".help-i");
